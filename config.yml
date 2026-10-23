@@ -8,14 +8,14 @@ lema: "Catálogo comunitario de literatura especulativa LGBTQ+ latinoamericana"
 
 # Dirección pública del sitio, sin barra final (se usa para enlaces al compartir).
 # Ejemplo: https://tu-usuaria.github.io/archivo-andromeda
-url_sitio: ""
+url_sitio: "https://archivo-andromeda.github.io/archivo-andromeda"
 
 # Enlace al Google Form para proponer obras (el enlace largo o el corto forms.gle/...).
 # Mientras esté vacío, la página "Proponer una obra" mostrará un aviso.
 formulario_url: ""
 
 # Correo o red de contacto (opcional). Déjalo vacío para no mostrarlo.
-contacto: ""
+contacto: "archivo.andromeda@gmail.com"
 
 # Créditos que aparecen en el pie de página.
 creditos: "Curaduría: Marion Garolera"
