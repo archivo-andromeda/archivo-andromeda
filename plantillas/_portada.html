@@ -1,0 +1,17 @@
+{# Portada: imagen real si existe; si no, una portada de tela hecha en casa #}
+{% macro portada(o, recurso, tam='') %}
+<figure class="portada {{ tam }}{% if not o.portada %} portada-tela{% endif %}" style="--tela: {{ o.tela }}">
+  <span class="cinta" aria-hidden="true"></span>
+  {% if o.portada %}
+    <img src="{{ recurso(o.portada) }}" alt="Portada de {{ o.titulo }}" loading="lazy">
+  {% else %}
+    <span class="tela-costura" aria-hidden="true"></span>
+    <span class="tela-etiqueta">
+      <span class="tela-titulo">{{ o.titulo }}</span>
+      <span class="tela-adorno" aria-hidden="true">✦</span>
+      <span class="tela-autoria">{{ o.autoria }}</span>
+    </span>
+    <figcaption class="sr">Portada provisoria de {{ o.titulo }}</figcaption>
+  {% endif %}
+</figure>
+{% endmacro %}

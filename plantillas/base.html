@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{{ sitio.nombre }}{% endblock %}</title>
+  <meta name="description" content="{% block descripcion %}{{ sitio.lema }}{% endblock %}">
+  <meta property="og:title" content="{{ self.titulo() }}">
+  <meta property="og:description" content="{{ self.descripcion() }}">
+  <meta property="og:site_name" content="{{ sitio.nombre }}">
+  {% block meta_extra %}{% endblock %}
+  <link rel="icon" href="{{ recurso('estatico/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ recurso('estatico/css/andromeda.css') }}">
+</head>
+<body class="{% block clase_body %}{% endblock %}">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <a class="marca" href="{{ enlace('') }}">
+      {% include "_constelacion.html" %}
+      <span class="marca-texto">
+        <span class="marca-nombre">{{ sitio.nombre }}</span>
+        <span class="marca-lema">{{ sitio.lema }}</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="{{ enlace('') }}" {% if destino == 'index.html' %}aria-current="page"{% endif %}>Catálogo</a>
+      <a href="{{ enlace('vocabulario/') }}" {% if destino.startswith('vocabulario') %}aria-current="page"{% endif %}>Vocabulario</a>
+      <a href="{{ enlace('acerca/') }}" {% if destino.startswith('acerca') %}aria-current="page"{% endif %}>Acerca</a>
+      <a class="nav-sello" href="{{ enlace('proponer/') }}" {% if destino.startswith('proponer') %}aria-current="page"{% endif %}>Proponer una obra</a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="pie">
+    <p class="pie-sello">{{ sitio.nombre }} · {{ total }} obras catalogadas</p>
+    <p>{{ sitio.creditos }}{% if sitio.contacto %} · <a href="{{ sitio.contacto if ':' in sitio.contacto else 'mailto:' ~ sitio.contacto }}">Contacto</a>{% endif %}</p>
+    <p class="pie-nota">Archivo comunitario en construcción. Las portadas pertenecen a sus editoriales y se usan con fines de catalogación.</p>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

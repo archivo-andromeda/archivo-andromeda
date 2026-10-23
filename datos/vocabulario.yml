@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────────────────────
+#  Vocabulario controlado de etiquetas
+#
+#  Cada etiqueta tiene:
+#    descripcion: texto breve que aparece en la página "Vocabulario"
+#    alias: otras formas de escribirla que se convierten automáticamente
+#           en esta etiqueta (útil cuando llegan propuestas del formulario)
+#
+#  Si una obra usa una etiqueta que no está aquí, el sitio igual la
+#  muestra, pero el registro de construcción avisa para que decidas
+#  si la agregas al vocabulario o la corriges en obras.csv.
+# ─────────────────────────────────────────────────────────────
+
+formatos:
+  novela:
+    descripcion: "Narración extensa de una sola autoría."
+  nouvelle:
+    descripcion: "Novela breve o novela corta."
+    alias: [novelle, novela corta, novela breve]
+  cuentos:
+    descripcion: "Colección de relatos de una misma autoría."
+    alias: [relatos, libro de cuentos]
+  antología:
+    descripcion: "Selección de textos, de una o varias autorías."
+    alias: [antologia, compilación]
+  poemario narrativo:
+    descripcion: "Poesía que construye un mundo o una historia."
+    alias: [poemario, poesía narrativa]
+
+subgeneros:
+  ciencia ficción:
+    descripcion: "Futuros, tecnologías, ciencias y otros mundos posibles."
+    alias: [cf, cifi, ci-fi, sci-fi, scifi, ciencia ficcion, cf-varios]
+  weird:
+    descripcion: "Lo raro: mezcla de lo fantástico, lo horroroso y lo inclasificable."
+    alias: [new weird, raro, lo raro]
+  distopía:
+    descripcion: "Sociedades que funcionan como advertencia."
+    alias: [distopia, distópica]
+  utopía:
+    descripcion: "Imaginaciones de mundos mejores o deseables."
+    alias: [utopia, utópica]
+  gótico:
+    descripcion: "Atmósferas de encierro, ruina, secreto y terror."
+    alias: [gotico, gótica]
+  ucronía:
+    descripcion: "Historias alternativas: ¿qué habría pasado si…?"
+    alias: [ucronia]
+  fantasía:
+    descripcion: "Mundos regidos por la magia o lo maravilloso."
+    alias: [fantasia, fantástico, fantastico]
+  horror:
+    descripcion: "Narrativas del miedo y lo monstruoso."
+    alias: [terror]
+  ficción climática:
+    descripcion: "Relatos sobre la crisis climática y ecológica."
+    alias: [cli-fi, clifi, ficcion climatica]
+  postapocalíptico:
+    descripcion: "Después del fin del mundo (o de un mundo)."
+    alias: [postapocaliptico, post-apocalíptico, postapocalipsis]
+  poesía especulativa:
+    descripcion: "Poesía que trabaja con imaginarios especulativos."
+    alias: [cifi-poesia, poesia especulativa, cf-poesía]
+
+disidencias:
+  lésbica:
+    descripcion: "Deseos, vínculos e identidades lésbicas y sáficas."
+    alias: [lesbica, lesbiana, sáfica, safica]
+  gay:
+    descripcion: "Deseos, vínculos e identidades gays."
+    alias: [homosexual]
+  marica:
+    descripcion: "Mariconerías: identidad y política marica."
+    alias: [maricón, marikón]
+  bisexual:
+    descripcion: "Deseos e identidades bisexuales y pansexuales."
+    alias: [bi, pansexual]
+  trans:
+    descripcion: "Experiencias e identidades trans."
+    alias: [transgénero, transmasculino, transfemenino]
+  travesti:
+    descripcion: "Identidad y política travesti."
+    alias: [trava]
+  no binarie:
+    descripcion: "Identidades fuera del binario de género."
+    alias: [no binario, no-binarie, nb, enby]
+  género fluido:
+    descripcion: "Identidades o cuerpos cuyo género cambia o fluye."
+    alias: [genero fluido, fluidez de género]
+  intersex:
+    descripcion: "Experiencias de cuerpos intersex."
+    alias: [intersexual]
+  asexual:
+    descripcion: "Experiencias asexuales y arrománticas."
+    alias: [ace, arromántica]
+  poliamor:
+    descripcion: "Vínculos no monógamos y familias múltiples."
+    alias: [poliamoroso, no monogamia]
+  cuir:
+    descripcion: "Disidencias sexogenéricas en sentido amplio."
+    alias: [queer, kuir, LGBTQ, lgbt]
+
+# Los temas son etiquetas libres: no necesitan estar en el vocabulario.
+# Si quieres unificar variantes, agrega aquí un alias.
+temas:
+  colapso climático:
+    alias: [cambio climático, crisis climática]

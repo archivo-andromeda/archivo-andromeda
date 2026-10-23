@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}{{ meta.titulo }} — {{ sitio.nombre }}{% endblock %}
+{% block clase_body %}pag-texto{% endblock %}
+{% block contenido %}
+<section class="texto">
+  {% if meta.cajon %}<p class="intro-cajon">{{ meta.cajon }}</p>{% endif %}
+  <h1>{{ meta.titulo }}</h1>
+  {% if pagina == 'proponer' %}
+  <div class="llamado">
+    {% if sitio.formulario_url %}
+      <a class="boton-sello" href="{{ sitio.formulario_url }}" target="_blank" rel="noopener">Abrir el formulario ↗</a>
+    {% else %}
+      <p class="pendiente-bloque">El formulario todavía no está conectado. (Para conectarlo, pega su enlace en <code>formulario_url</code> dentro de <code>config.yml</code>.)</p>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="prosa">{{ contenido|safe }}</div>
+</section>
+{% endblock %}
