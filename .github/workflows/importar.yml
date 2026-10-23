@@ -1,0 +1,43 @@
+name: Importar propuestas
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Enlace CSV de la hoja de propuestas (déjalo vacío para usar el guardado en PROPUESTAS_CSV_URL)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Importar filas aprobadas
+        env:
+          URL_INPUT: ${{ inputs.url }}
+          URL_GUARDADA: ${{ vars.PROPUESTAS_CSV_URL }}
+        run: |
+          URL="${URL_INPUT:-$URL_GUARDADA}"
+          if [ -z "$URL" ]; then
+            echo "::error::Falta el enlace CSV. Pégalo al ejecutar o guárdalo como variable PROPUESTAS_CSV_URL."
+            exit 1
+          fi
+          python scripts/importar_propuestas.py "$URL"
+      - name: Guardar cambios
+        run: |
+          if git diff --quiet datos/obras.csv; then
+            echo "No hay obras nuevas."
+            exit 0
+          fi
+          git config user.name "archivo-andromeda[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/obras.csv
+          git commit -m "Importar propuestas aprobadas del formulario"
+          git push
