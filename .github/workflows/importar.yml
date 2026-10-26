@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
       - name: Importar filas aprobadas
         env:
           URL_INPUT: ${{ inputs.url }}
@@ -32,12 +34,14 @@ jobs:
           python scripts/importar_propuestas.py "$URL"
       - name: Guardar cambios
         run: |
-          if git diff --quiet datos/obras.csv; then
+          if [ -z "$(git status --porcelain datos/obras.csv estatico/portadas)" ]; then
             echo "No hay obras nuevas."
             exit 0
           fi
           git config user.name "archivo-andromeda[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add datos/obras.csv
+          git add datos/obras.csv estatico/portadas
+          git commit -m "Importar propuestas aprobadas del formulario"
+          git push
           git commit -m "Importar propuestas aprobadas del formulario"
           git push
