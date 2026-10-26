@@ -61,6 +61,7 @@
         {% if obra.editorial or not obra.pub_nombre %}<div><dt>Editorial</dt><dd>{{ obra.editorial or 'por completar' }}</dd></div>{% endif %}
         <div><dt>Subgénero</dt><dd>{% if obra.subgeneros %}{{ sellos('subgeneros', obra.subgeneros) }}{% else %}—{% endif %}</dd></div>
         <div><dt>Disidencias</dt><dd>{% if obra.disidencias %}{{ sellos('disidencias', obra.disidencias) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
+        {% if obra.afectos %}<div><dt>Afectos</dt><dd>{{ sellos('afectos', obra.afectos) }}</dd></div>{% endif %}
         <div><dt>Temas</dt><dd>{% if obra.temas %}{{ sellos('temas', obra.temas) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
         {% if obra.conseguir %}<div><dt>Dónde conseguirla</dt><dd>{{ lista_enlaces(obra.conseguir) }}</dd></div>{% endif %}
         {% if obra.referencias %}<div><dt>Referencias</dt><dd>{{ lista_enlaces(obra.referencias) }}</dd></div>{% endif %}
