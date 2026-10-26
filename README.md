@@ -88,9 +88,9 @@ Pulsa **Commit changes**. El sitio se vuelve a publicar solo.
 
 En <https://forms.google.com> crea un formulario nuevo. **Usa estos títulos de pregunta**: el importador las reconoce por el comienzo del texto, así que puedes agregar una aclaración al final del título, pero no cambiar el principio. El orden no importa.
 
-Divide el formulario en **tres secciones** (botón *Agregar sección*): «La obra» con las preguntas 1 a 7, «Datos de publicación (opcional)» con las preguntas 8 a 17 y «Para terminar» con la 18. Solo título y autore son obligatorias.
+Divide el formulario en **tres secciones** (botón *Agregar sección*): «La obra» con las preguntas 1 a 8, «Datos de publicación (opcional)» con las preguntas 9 a 18 y «Para terminar» con la 19. Solo título y autore son obligatorias.
 
-La primera sección reúne lo que más sirve que complete quien leyó la obra: el subgénero, las disidencias, los temas y la descripción. Los datos de publicación casi siempre se pueden encontrar en línea después.
+La primera sección reúne lo que más sirve que complete quien leyó la obra: el subgénero, las disidencias, los afectos, los temas y la descripción. Los datos de publicación casi siempre se pueden encontrar en línea después.
 
 **Sección 1 · La obra**
 
@@ -101,33 +101,34 @@ La primera sección reúne lo que más sirve que complete quien leyó la obra: e
 | 3 | Formato | Opción múltiple | | Novela · Novela corta · Libro de cuentos · Antología · Cuento · Microficción · Poemario narrativo · *Otro* |
 | 4 | Subgénero especulativo | Casillas | | Ciencia ficción · Weird · Distopía · Utopía · Gótico · Ucronía · Fantasía · Horror · Ficción climática · Postapocalíptico · Poesía especulativa · *Otro* |
 | 5 | Disidencias sexogenéricas representadas | Casillas | | Lésbica · Gay · Marica · Bisexual · Trans · Travesti · No binarie · Género fluido · Intersex · Asexual · Poliamor · Cuir · *Otro* |
-| 6 | Temas | Respuesta corta | | *Ayuda: «Algunas palabras clave, separadas por comas»* |
-| 7 | Descripción breve | Párrafo | | |
+| 6 | Afectos: ¿Qué te hizo sentir esta obra? | Casillas | | Esperanza · Agobio · Calentura · Congoja · Ternura · Mariposas · Rabia · Asco · Extrañeza · Curiosidad · *Otro* |
+| 7 | Temas | Respuesta corta | | *Ayuda: «Algunas palabras clave, separadas por comas»* |
+| 8 | Descripción breve | Párrafo | | |
 
 **Sección 2 · Datos de publicación (opcional)**
 
 | # | Título de la pregunta | Tipo | Opciones o ayuda |
 |---|---|---|---|
-| 8 | Publicado en | Respuesta corta | *Ayuda: «Si es un cuento o una microficción: el nombre del libro, antología, revista o sitio donde se publicó.»* |
-| 9 | Año de publicación | Respuesta corta | |
-| 10 | País | Respuesta corta | *Ayuda: «Si son varios, sepáralos con comas»* |
-| 11 | Medio | Opción múltiple | Editorial · Autopublicación · Editorial cartonera · Fanzine · Plaquette · Revista impresa · Revista en línea · Blog o web personal · Redes sociales · *Otro* |
-| 12 | Editorial | Respuesta corta | |
-| 13 | Editorx o compilación | Respuesta corta | *Ayuda: «Quién editó o compiló la antología o revista, si corresponde.»* |
-| 14 | Dónde conseguirla o leerla en línea | Respuesta corta | *Ayuda: «Un enlace: la página de la editorial o, si se publicó en internet, el texto mismo.»* |
-| 15 | Referencias: Goodreads, Tercera Fundación u otras bases | Respuesta corta | *Ayuda: «Enlaces a la ficha de la obra en bases de datos de libros.»* |
-| 16 | Otros enlaces: reseñas, entrevistas | Respuesta corta | |
-| 17 | Enlace a la imagen de portada | Respuesta corta | *Ayuda: «Un enlace directo a la imagen. También sirve un enlace de Google Drive compartido.»* |
+| 9 | Publicado en | Respuesta corta | *Ayuda: «Si es un cuento o una microficción: el nombre del libro, antología, revista o sitio donde se publicó.»* |
+| 10 | Año de publicación | Respuesta corta | |
+| 11 | País | Respuesta corta | *Ayuda: «Si son varios, sepáralos con comas»* |
+| 12 | Medio | Opción múltiple | Editorial · Autopublicación · Editorial cartonera · Fanzine · Plaquette · Revista impresa · Revista en línea · Blog o web personal · Redes sociales · *Otro* |
+| 13 | Editorial | Respuesta corta | |
+| 14 | Editorx o compilación | Respuesta corta | *Ayuda: «Quién editó o compiló la antología o revista, si corresponde.»* |
+| 15 | Dónde conseguirla o leerla en línea | Respuesta corta | *Ayuda: «Un enlace: la página de la editorial o, si se publicó en internet, el texto mismo.»* |
+| 16 | Referencias: Goodreads, Tercera Fundación u otras bases | Respuesta corta | *Ayuda: «Enlaces a la ficha de la obra en bases de datos de libros.»* |
+| 17 | Otros enlaces: reseñas, entrevistas | Respuesta corta | |
+| 18 | Enlace a la imagen de portada | Respuesta corta | *Ayuda: «Un enlace directo a la imagen. También sirve un enlace de Google Drive compartido.»* |
 
 **Sección 3 · Para terminar**
 
 | # | Título de la pregunta | Tipo | Opciones o ayuda |
 |---|---|---|---|
-| 18 | Tu nombre o seudónimo (opcional) | Respuesta corta | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
+| 19 | Tu nombre o seudónimo (opcional) | Respuesta corta | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
 
 En las preguntas de opciones, el orden de las opciones da lo mismo: el importador lee el texto. Lo que importa es que cada opción coincida con una etiqueta de `datos/vocabulario.yml` o con uno de sus alias, y que ninguna lleve comas (Google separa con comas las casillas marcadas).
 
-Al importar, el enlace de la pregunta 14 se guarda como **lectura en línea** si el medio es revista en línea, blog o redes sociales, y como **dónde conseguirla** en los demás casos.
+Al importar, el enlace de la pregunta 15 se guarda como **lectura en línea** si el medio es revista en línea, blog o redes sociales, y como **dónde conseguirla** en los demás casos.
 
 > En **Configuración** del formulario, deja **desactivada** la opción de recopilar correos electrónicos: la hoja con las propuestas aprobadas será pública.
 
@@ -189,7 +190,7 @@ Solo las fichas confirmadas participan en la **obra del día** de la portada. El
 
 ### Obras relacionadas
 
-Cada ficha muestra hasta 3 obras relacionadas, calculadas solas al publicar. Suman puntos la misma autoría (5), cada disidencia compartida (3), cada subgénero y cada tema compartido (2), el mismo país (1) y la misma década (1); se muestran las que tienen 4 puntos o más, con lo que comparten. Los pesos se cambian al comienzo de `scripts/construir.py` (`PESOS_RELACION`, `RELACIONADAS_MAX`, `RELACIONADAS_MINIMO`).
+Cada ficha muestra hasta 3 obras relacionadas, calculadas solas al publicar. Suman puntos la misma autoría (5), cada disidencia compartida (3), cada subgénero y cada tema compartido (2), cada afecto compartido (1), el mismo país (1) y la misma década (1); se muestran las que tienen 4 puntos o más, con lo que comparten. Los pesos se cambian al comienzo de `scripts/construir.py` (`PESOS_RELACION`, `RELACIONADAS_MAX`, `RELACIONADAS_MINIMO`).
 
 ### Agregar portadas
 
@@ -232,6 +233,7 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 | `publicado_en` | Para cuentos: el `id` o título de un libro del archivo, o el nombre de la antología, revista o web | `ciencia-ficcion-travesti` |
 | `subgeneros` | Varios, separados por `;` | `distopía; gótico` |
 | `disidencias` | Varios, separados por `;` | `lésbica` |
+| `afectos` | Del vocabulario: lo que la obra le hizo sentir a quien la leyó. Varios, separados por `;` | `ternura; rabia` |
 | `temas` | Libres, separados por `;` | `religión; cuerpo; memoria` |
 | `editorial` | | `Alfaguara` |
 | `descripcion` | Texto de la ficha | |
