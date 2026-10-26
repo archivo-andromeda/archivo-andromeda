@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% from "_portada.html" import portada %}
+{% from "_tarjeta.html" import tarjeta %}
+{% block titulo %}{{ obra.titulo }} · {{ obra.autoria }} — {{ sitio.nombre }}{% endblock %}
+{% block descripcion %}{{ (obra.descripcion or (obra.titulo ~ ', de ' ~ obra.autoria ~ (' (' ~ obra.pais|join(', ') ~ ', ' ~ obra.anio ~ ')' if obra.anio else '') ~ '. Ficha del ' ~ sitio.nombre ~ '.'))|truncate(180) }}{% endblock %}
+{% block meta_extra %}
+  {% if obra.portada and sitio.url_sitio %}<meta property="og:image" content="{{ obra.portada if obra.portada_externa else sitio.url_sitio ~ '/' ~ obra.portada }}">{% endif %}
+  <meta property="og:type" content="book">
+{% endblock %}
+{% block clase_body %}pag-ficha{% endblock %}
+
+{% macro sellos(dim, valores) %}
+  {% for v in valores %}<a class="sello sello-{{ dim }}{% if dim == 'disidencias' %} sello-dis{% endif %}" href="{{ enlace('?' ~ dims[dim][2] ~ '=' ~ v|urlencode) }}">{{ v }}</a>{% endfor %}
+{% endmacro %}
+
+{% macro lista_enlaces(lista) %}
+  {% for e in lista %}<a class="enlace-externo" href="{{ e.url }}" rel="noopener" target="_blank">{{ e.etiqueta }} ↗</a>{% endfor %}
+{% endmacro %}
+
+{% macro publicacion(o) %}
+  {% if o.contenedor %}<a href="{{ enlace('obras/' ~ o.contenedor.id ~ '/') }}"><em>{{ o.contenedor.titulo }}</em></a>
+  {%- else %}<a href="{{ enlace('?' ~ param_pub ~ '=' ~ o.pub|urlencode) }}" title="Ver todo lo publicado aquí"><em>{{ o.pub_nombre }}</em></a>{% endif %}
+{% endmacro %}
+
+{% block contenido %}
+<nav class="migas" aria-label="Ruta">
+  <a href="{{ enlace('') }}">Catálogo</a> <span aria-hidden="true">/</span>
+  {% if obra.contenedor %}<a href="{{ enlace('obras/' ~ obra.contenedor.id ~ '/') }}">{{ obra.contenedor.titulo }}</a> <span aria-hidden="true">/</span>{% endif %}
+  <span aria-current="page">{{ obra.titulo }}</span>
+</nav>
+
+<article class="ficha">
+  <div class="ficha-portada">
+    {{ portada(obra, recurso, 'portada-grande') }}
+    {% if obra.portada_heredada %}<p class="portada-nota">Portada de <em>{{ obra.contenedor.titulo }}</em></p>{% endif %}
+  </div>
+
+  <div class="ficha-cuerpo">
+    <header class="ficha-cabecera">
+      <p class="ficha-sig">{{ obra.formato|join(', ') }}{% if obra.anio %} · {{ obra.anio }}{% endif %}</p>
+      <h1>{{ obra.titulo }}</h1>
+      <p class="ficha-autoria">{{ obra.autoria }}</p>
+      {% if obra.pub_nombre %}<p class="ficha-publicado">Publicado en {{ publicacion(obra) }}</p>{% endif %}
+      {% if obra.leer_en_linea %}
+      <p class="ficha-acciones">
+        {% for e in obra.leer_en_linea %}<a class="boton-sello boton-leer" href="{{ e.url }}" rel="noopener" target="_blank">Leer en línea{% if obra.leer_en_linea|length > 1 %} · {{ e.etiqueta }}{% endif %} ↗</a>{% endfor %}
+      </p>
+      {% endif %}
+    </header>
+
+    <div class="tarjeta-catalogo">
+      {% if obra.revision %}<span class="sello-revision" title="{{ obra.revision }}">Ficha en revisión</span>{% endif %}
+      <dl class="tabla">
+        <div><dt>Autoría</dt><dd>{{ obra.autoria }}</dd></div>
+        {% if obra.editorx %}<div><dt>Editorx</dt><dd>{{ obra.editorx }}</dd></div>{% endif %}
+        <div><dt>Año</dt><dd>{{ obra.anio or '—' }}</dd></div>
+        <div><dt>País</dt><dd>{% if obra.pais %}{{ sellos('pais', obra.pais) }}{% else %}—{% endif %}</dd></div>
+        <div><dt>Formato</dt><dd>{% if obra.formato %}{{ sellos('formato', obra.formato) }}{% else %}—{% endif %}</dd></div>
+        <div><dt>Medio</dt><dd>{% if obra.medio %}{{ sellos('medio', obra.medio) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
+        {% if obra.pub_nombre %}<div><dt>Publicado en</dt><dd>{{ publicacion(obra) }}</dd></div>{% endif %}
+        {% if obra.editorial or not obra.pub_nombre %}<div><dt>Editorial</dt><dd>{{ obra.editorial or 'por completar' }}</dd></div>{% endif %}
+        <div><dt>Subgénero</dt><dd>{% if obra.subgeneros %}{{ sellos('subgeneros', obra.subgeneros) }}{% else %}—{% endif %}</dd></div>
+        <div><dt>Disidencias</dt><dd>{% if obra.disidencias %}{{ sellos('disidencias', obra.disidencias) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
+        <div><dt>Temas</dt><dd>{% if obra.temas %}{{ sellos('temas', obra.temas) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
+        {% if obra.conseguir %}<div><dt>Dónde conseguirla</dt><dd>{{ lista_enlaces(obra.conseguir) }}</dd></div>{% endif %}
+        {% if obra.referencias %}<div><dt>Referencias</dt><dd>{{ lista_enlaces(obra.referencias) }}</dd></div>{% endif %}
+        {% if obra.enlace %}<div><dt>Más información</dt><dd>{{ lista_enlaces(obra.enlace) }}</dd></div>{% endif %}
+        {% if obra.propuesta_por %}<div><dt>Propuesta por</dt><dd>{{ obra.propuesta_por }}</dd></div>{% endif %}
+      </dl>
+    </div>
+
+    <section class="ficha-descripcion">
+      <h2 class="sr">Descripción</h2>
+      {% if obra.descripcion %}
+        {% for p in obra.descripcion.split('\n') if p.strip() %}<p>{{ p }}</p>{% endfor %}
+      {% else %}
+        <p class="pendiente-bloque">Descripción por completar. Si conoces esta obra, puedes <a href="{{ enlace('proponer/') }}">enviarnos una reseña breve</a>.</p>
+      {% endif %}
+    </section>
+
+    <p class="ficha-correccion">¿Ves un error o falta algo? <a href="{{ enlace('proponer/') }}">Propón una corrección</a>.</p>
+  </div>
+</article>
+
+{% if obra.contenidos %}
+<section class="contenidos" aria-labelledby="contenidos-titulo">
+  <h2 id="contenidos-titulo">{{ obra.contenidos_nombre }} de este libro en el archivo <span class="contenidos-n">{{ obra.contenidos|length }}</span></h2>
+  {% set extra = obra.etiquetas_contenidos %}
+  {% if extra.disidencias or extra.subgeneros %}
+  <p class="contenidos-etiquetas"><span>En sus cuentos también:</span>
+    {{ sellos('disidencias', extra.disidencias) }}{{ sellos('subgeneros', extra.subgeneros) }}
+  </p>
+  {% endif %}
+  <ol class="fichero fichero-contenidos">
+    {% for c in obra.contenidos %}<li class="ficha-tarjeta">{{ tarjeta(c, enlace, recurso, con_pub=false) }}</li>{% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+{% if anterior or siguiente %}
+<nav class="vecinas" aria-label="Otras obras">
+  {% if anterior %}<a class="vecina vecina-ant" href="{{ enlace('obras/' ~ anterior.id ~ '/') }}"><span>← anterior{% if obra.contenedor %} en este libro{% endif %}</span>{{ anterior.titulo }}</a>{% else %}<span></span>{% endif %}
+  {% if siguiente %}<a class="vecina vecina-sig" href="{{ enlace('obras/' ~ siguiente.id ~ '/') }}"><span>siguiente{% if obra.contenedor %} en este libro{% endif %} →</span>{{ siguiente.titulo }}</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}
