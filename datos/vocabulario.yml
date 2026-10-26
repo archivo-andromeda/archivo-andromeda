@@ -17,15 +17,56 @@ formatos:
   nouvelle:
     descripcion: "Novela breve o novela corta."
     alias: [novelle, novela corta, novela breve]
-  cuentos:
+  libro de cuentos:
     descripcion: "Colección de relatos de una misma autoría."
-    alias: [relatos, libro de cuentos]
+    alias: [cuentos, relatos, libro de relatos, colección de cuentos]
   antología:
-    descripcion: "Selección de textos, de una o varias autorías."
-    alias: [antologia, compilación]
+    descripcion: "Selección de textos de varias autorías, reunidos en una compilación."
+    alias: [antologia, compilación, compilacion]
+  cuento:
+    descripcion: "Un relato suelto, publicado en un libro, una revista o la web."
+    alias: [relato, cuento suelto]
+  microficción:
+    descripcion: "Un relato muy breve: microrrelato o minificción."
+    alias: [microficcion, micro ficción, microrrelato, minificción, minificcion, microcuento]
   poemario narrativo:
     descripcion: "Poesía que construye un mundo o una historia."
     alias: [poemario, poesía narrativa]
+
+# Medio: dónde o cómo se publicó la obra.
+# Los que llevan «en_linea: true» hacen que, al importar una propuesta,
+# el enlace «Dónde conseguirla o leerla» se guarde como lectura en línea.
+medios:
+  editorial:
+    descripcion: "Publicada por una editorial, grande o independiente."
+    alias: [libro, editorial independiente]
+  autopublicación:
+    descripcion: "Publicada por su propia autoría, en papel o digital."
+    alias: [autopublicacion, autoedición, autoedicion, autopublicado]
+  editorial cartonera:
+    descripcion: "Libros artesanales con tapas de cartón reciclado, una tradición latinoamericana."
+    alias: [cartonera]
+  fanzine:
+    descripcion: "Publicaciones autogestionadas, de tiraje corto y circulación de mano en mano."
+    alias: [zine, fanzines]
+  plaquette:
+    descripcion: "Cuadernillo breve, a menudo de edición artesanal."
+    alias: [plaqueta, cuadernillo]
+  revista impresa:
+    descripcion: "Revista o publicación periódica en papel."
+    alias: [revista]
+  revista en línea:
+    descripcion: "Revista o publicación periódica digital."
+    alias: [revista en linea, revista digital, revista web]
+    en_linea: true
+  blog o sitio personal:
+    descripcion: "Publicada en un blog o una web propia."
+    alias: [blog, sitio personal, sitio web, web personal]
+    en_linea: true
+  redes sociales:
+    descripcion: "Publicada en redes, por ejemplo como hilo o serie de posts."
+    alias: [red social, hilo, instagram, twitter, bluesky, tumblr]
+    en_linea: true
 
 subgeneros:
   ciencia ficción:

@@ -22,6 +22,7 @@ Todo el catálogo vive en un solo archivo, **`datos/obras.csv`**. Cada vez que l
 ```
 datos/obras.csv          ← EL CATÁLOGO: una fila por obra
 datos/vocabulario.yml    ← etiquetas permitidas, sus descripciones y sinónimos
+datos/autores.csv        ← datos de autoras y autores (opcional, se llena a mano)
 config.yml               ← nombre del sitio, enlace al formulario, créditos
 paginas/acerca.md        ← texto de la página «Acerca»
 paginas/proponer.md      ← texto de la página «Proponer una obra»
@@ -85,23 +86,39 @@ Pulsa **Commit changes**. El sitio se vuelve a publicar solo.
 
 ### 3.1 Crear el formulario
 
-En <https://forms.google.com> crea un formulario nuevo. **Usa exactamente estos títulos de pregunta, en este orden**, porque el importador las reconoce por el comienzo del texto:
+En <https://forms.google.com> crea un formulario nuevo. **Usa estos títulos de pregunta**: el importador las reconoce por el comienzo del texto, así que puedes agregar una aclaración al final del título, pero no cambiar el principio. El orden no importa.
 
-| # | Título de la pregunta | Tipo | Obligatoria | Opciones |
+Divide el formulario en **dos secciones** (botón *Agregar sección*): «Lo básico» con las preguntas 1 a 7 y «Más detalles (opcional)» con el resto. Solo título y autoría son obligatorias.
+
+**Sección 1 · Lo básico**
+
+| # | Título de la pregunta | Tipo | Obligatoria | Opciones o ayuda |
 |---|---|---|---|---|
 | 1 | Título de la obra | Respuesta corta | Sí | |
-| 2 | Autoría | Respuesta corta | Sí | |
-| 3 | Año de publicación | Respuesta corta | | |
-| 4 | País | Respuesta corta | | *Ayuda: «Si son varios, sepáralos con comas»* |
-| 5 | Formato | Opción múltiple | | Novela · Nouvelle · Cuentos · Antología · Poemario narrativo · *Otro* |
-| 6 | Subgénero especulativo | Casillas | | Ciencia ficción · Weird · Distopía · Utopía · Gótico · Ucronía · Fantasía · Horror · Ficción climática · Postapocalíptico · Poesía especulativa · *Otro* |
-| 7 | Disidencias sexogenéricas representadas | Casillas | | Lésbica · Gay · Marica · Bisexual · Trans · Travesti · No binarie · Género fluido · Intersex · Asexual · Poliamor · Cuir · *Otro* |
-| 8 | Temas | Respuesta corta | | *Ayuda: «Algunas palabras clave, separadas por comas»* |
-| 9 | Editorial | Respuesta corta | | |
-| 10 | Descripción breve | Párrafo | | |
-| 11 | Enlace para saber más | Respuesta corta | | |
-| 12 | Enlace a la imagen de portada | Respuesta corta | | |
-| 13 | Tu nombre o seudónimo (opcional) | Respuesta corta | | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
+| 2 | Autoría | Respuesta corta | Sí | *Ayuda: «Si son varias personas, sepáralas con punto y coma. Usa el nombre actual de cada persona.»* |
+| 3 | Formato | Opción múltiple | | Novela · Nouvelle · Libro de cuentos · Antología · Cuento · Microficción · Poemario narrativo · *Otro* |
+| 4 | Publicado en | Respuesta corta | | *Ayuda: «Si es un cuento o una microficción: el nombre del libro, antología, revista o sitio donde se publicó.»* |
+| 5 | Año de publicación | Respuesta corta | | |
+| 6 | País | Respuesta corta | | *Ayuda: «Si son varios, sepáralos con comas»* |
+| 7 | Dónde conseguirla o leerla en línea | Respuesta corta | | *Ayuda: «Un enlace: la página de la editorial o, si se publicó en internet, el texto mismo.»* |
+
+**Sección 2 · Más detalles (opcional)**
+
+| # | Título de la pregunta | Tipo | Opciones o ayuda |
+|---|---|---|---|
+| 8 | Editorx o compilación | Respuesta corta | *Ayuda: «Quién editó o compiló la antología o revista, si corresponde.»* |
+| 9 | Medio | Opción múltiple | Editorial · Autopublicación · Editorial cartonera · Fanzine · Plaquette · Revista impresa · Revista en línea · Blog o sitio personal · Redes sociales · *Otro* |
+| 10 | Editorial | Respuesta corta | |
+| 11 | Subgénero especulativo | Casillas | Ciencia ficción · Weird · Distopía · Utopía · Gótico · Ucronía · Fantasía · Horror · Ficción climática · Postapocalíptico · Poesía especulativa · *Otro* |
+| 12 | Disidencias sexogenéricas representadas | Casillas | Lésbica · Gay · Marica · Bisexual · Trans · Travesti · No binarie · Género fluido · Intersex · Asexual · Poliamor · Cuir · *Otro* |
+| 13 | Temas | Respuesta corta | *Ayuda: «Algunas palabras clave, separadas por comas»* |
+| 14 | Descripción breve | Párrafo | |
+| 15 | Referencias: Goodreads, Tercera Fundación u otras bases | Respuesta corta | *Ayuda: «Enlaces a la ficha de la obra en bases de datos de libros.»* |
+| 16 | Otros enlaces: reseñas, entrevistas | Respuesta corta | |
+| 17 | Enlace a la imagen de portada | Respuesta corta | *Ayuda: «Un enlace directo a la imagen. También sirve un enlace de Google Drive compartido.»* |
+| 18 | Tu nombre o seudónimo (opcional) | Respuesta corta | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
+
+Al importar, el enlace de la pregunta 7 se guarda como **lectura en línea** si el medio es revista en línea, blog o redes sociales, y como **dónde conseguirla** en los demás casos.
 
 > En **Configuración** del formulario, deja **desactivada** la opción de recopilar correos electrónicos: la hoja con las propuestas aprobadas será pública.
 
@@ -114,14 +131,14 @@ formulario_url: "https://forms.gle/xxxxxxxx"
 ### 3.2 Preparar la hoja de respuestas
 
 1. En el formulario, pestaña **Respuestas** → **Vincular con Hojas de cálculo** → crear una hoja nueva.
-2. En la hoja, la columna **A** es la marca temporal y las preguntas van de **B** a **N**. En la celda **O1** escribe: `Aprobada`.
+2. En la hoja, la columna **A** es la marca temporal y después vienen las preguntas. En la **primera columna vacía** de la fila 1, escribe: `Aprobada`.
 3. Crea una **segunda pestaña** (botón **+** abajo a la izquierda) llamada `aprobadas`. En su celda **A1** pega esta fórmula:
 
    ```
-   =QUERY('Respuestas de formulario 1'!A:O; "select * where lower(O) = 'sí' or lower(O) = 'si'"; 1)
+   =QUERY({'Respuestas de formulario 1'!A:AD}; "select * where lower(Col" & MATCH("Aprobada"; 'Respuestas de formulario 1'!1:1; 0) & ") matches 's[ií]'"; 1)
    ```
 
-   (Si tu hoja usa coma como separador, cambia los `;` por `,`. Si la pestaña de respuestas tiene otro nombre, ajústalo.)
+   La fórmula busca sola la columna «Aprobada», así que sigue funcionando aunque agregues preguntas al formulario más adelante. (Si tu hoja usa coma como separador, cambia los `;` por `,`. Si la pestaña de respuestas tiene otro nombre, ajústalo en los dos lugares.)
 
 4. Publica **solo esa pestaña**: **Archivo → Compartir → Publicar en la web** → elige la pestaña `aprobadas` → formato **Valores separados por comas (.csv)** → **Publicar**. Copia el enlace que aparece.
 
@@ -161,9 +178,23 @@ Cuando hayas revisado una obra, borra el texto de su columna `revision` y desapa
 
 ### Agregar portadas
 
-- **Imagen propia:** súbela a `estatico/portadas/` (por ejemplo `las-indignas.jpg`) y escribe ese nombre en la columna `portada`.
-- **Imagen en internet:** pega la URL completa en `portada`.
-- **Sin imagen:** deja la columna vacía y el sitio dibuja una portada de tela con el título.
+- **Desde el formulario:** si la propuesta trae un enlace a la imagen, el importador la descarga, la achica y la guarda sola en `estatico/portadas/<id>.webp`. Si no puede, lo anota en la columna `revision`.
+- **Imagen propia:** súbela a `estatico/portadas/` (**Add file → Upload files**; por ejemplo `las-indignas.jpg`) y escribe ese nombre en la columna `portada`. No importa si es grande: al publicar, el sitio la achica a 600 px de ancho (el archivo original no se toca).
+- **Imagen en internet:** se puede pegar una URL completa en `portada`, pero no es recomendable: si la otra página cambia, la imagen desaparece.
+- **Sin imagen:** deja la columna vacía y el sitio dibuja una portada provisoria. Un cuento sin portada usa la del libro donde se publicó, si está en el archivo.
+
+### Cuentos sueltos y «publicado en»
+
+Un cuento o una microficción se cataloga como cualquier obra, con formato `cuento` o `microficción` y la columna `publicado_en`:
+
+- Si `publicado_en` es el **`id` o el título de una ficha del archivo** (por ejemplo, `ciencia-ficcion-travesti`), el cuento y el libro se enlazan en ambos sentidos: la ficha del libro muestra «Cuentos de este libro en el archivo». Esos cuentos **no aparecen en el catálogo por defecto**; se ven al filtrar por formato «cuento», al buscar su título o desde la ficha del libro.
+- Si es **otro nombre** (una antología que no está entera en el archivo, una revista, un blog), el cuento aparece en el catálogo como cualquier obra. Al hacer clic en ese nombre se ven todas las obras publicadas en el mismo lugar.
+
+### Autoras, autores y nombres
+
+- Varias personas en `autoria` o `editorx` se separan con `;`.
+- Usa siempre el **nombre actual** de cada persona. Si una obra se publicó con otro nombre, o una persona aparece escrita de formas distintas, agrégala a `datos/autores.csv` con sus `variantes` (separadas por `;`): el sitio agrupa todo bajo el nombre actual y **nunca muestra las variantes** ni las usa en el buscador.
+- `autores.csv` es opcional. Columnas: `id`, `nombre`, `variantes`, `pais`, `bio`, `enlaces`. Las fichas de autores usarán estos datos más adelante.
 
 ### Agregar o cambiar etiquetas del vocabulario
 
@@ -177,17 +208,23 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 |---|---|---|
 | `id` | Identificador para la dirección de la ficha. Si lo dejas vacío, se crea solo a partir del título. | `las-indignas` |
 | `titulo` | **Obligatorio.** | `Las indignas` |
-| `autoria` | **Obligatorio.** | `Agustina Bazterrica` |
+| `autoria` | **Obligatorio.** Una o varias personas, separadas por `;` | `Agustina Bazterrica` |
+| `editorx` | Quien edita o compila, separado por `;` | |
 | `anio` | Año de primera publicación | `2023` |
 | `pais` | Uno o varios, separados por `;` | `Argentina` |
-| `formato` | Del vocabulario | `Novela` |
+| `formato` | Del vocabulario: novela, nouvelle, libro de cuentos, antología, cuento, microficción, poemario narrativo | `novela` |
+| `medio` | Del vocabulario: editorial, autopublicación, editorial cartonera, fanzine, plaquette, revista impresa, revista en línea, blog o sitio personal, redes sociales | `editorial` |
+| `publicado_en` | Para cuentos: el `id` o título de un libro del archivo, o el nombre de la antología, revista o web | `ciencia-ficcion-travesti` |
 | `subgeneros` | Varios, separados por `;` | `distopía; gótico` |
 | `disidencias` | Varios, separados por `;` | `lésbica` |
 | `temas` | Libres, separados por `;` | `religión; cuerpo; memoria` |
 | `editorial` | | `Alfaguara` |
 | `descripcion` | Texto de la ficha | |
-| `portada` | Nombre de archivo en `estatico/portadas/` o URL | `las-indignas.jpg` |
-| `enlace` | Página para saber más | `https://…` |
+| `portada` | Nombre de archivo en `estatico/portadas/` (o una URL) | `las-indignas.jpg` |
+| `conseguir` | Dónde conseguirla, de preferencia la página de la editorial. Varios, separados por `;` | `https://…` |
+| `leer_en_linea` | Enlace para leerla gratis en internet. Aparece como botón destacado | `https://…` |
+| `referencias` | Fichas en bases de datos de libros, separadas por `;`. Goodreads, Tercera Fundación, ISFDB, StoryGraph y otras aparecen con su nombre | `https://www.goodreads.com/…` |
+| `enlace` | Más información: reseñas, entrevistas. Varios, separados por `;` | `https://…` |
 | `propuesta_por` | Quién la propuso (opcional) | |
 | `revision` | Si tiene texto, la ficha muestra el sello «en revisión» y ese texto aparece al pasar el cursor. | |
 

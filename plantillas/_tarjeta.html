@@ -1,0 +1,18 @@
+{# Tarjeta de una obra: se usa en el catálogo y en «Cuentos de este libro» #}
+{% from "_portada.html" import portada %}
+{% macro tarjeta(o, enlace, recurso, con_pub=true) %}
+<a class="tarjeta" href="{{ enlace('obras/' ~ o.id ~ '/') }}">
+  {{ portada(o, recurso, 'portada-mini') }}
+  <div class="tarjeta-cuerpo">
+    <p class="tarjeta-sig">{{ o.formato|join(', ') }}{% if o.anio %} · {{ o.anio }}{% endif %}</p>
+    <h2 class="tarjeta-titulo">{{ o.titulo }}</h2>
+    <p class="tarjeta-autoria">{{ o.autoria }}{% if o.pais %} <span>— {{ o.pais|join(', ') }}</span>{% endif %}</p>
+    {% if con_pub and o.pub_nombre %}<p class="tarjeta-pub">en <em>{{ o.pub_nombre }}</em></p>{% endif %}
+    <ul class="tarjeta-sellos">
+      {% for d in o.disidencias %}<li class="sello sello-dis">{{ d }}</li>{% endfor %}
+      {% for s in o.subgeneros %}<li class="sello">{{ s }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% if o.revision %}<span class="marca-revision" title="{{ o.revision }}">en revisión</span>{% endif %}
+</a>
+{% endmacro %}

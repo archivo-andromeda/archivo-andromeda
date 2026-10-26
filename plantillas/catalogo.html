@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_portada.html" import portada %}
+{% from "_tarjeta.html" import tarjeta %}
 {% block clase_body %}pag-catalogo{% endblock %}
 
 {% block contenido %}
@@ -47,26 +47,15 @@
       </label>
     </div>
     <div class="estado" aria-live="polite">
-      <p id="contador">{{ obras|length }} obras</p>
+      <p id="contador">{{ obras|rejectattr("oculta")|list|length }} obras</p>
       <div id="activos" class="activos"></div>
     </div>
+    <p class="aviso-ocultas" id="aviso-ocultas" hidden></p>
 
     <ol class="fichero" id="fichero">
       {% for o in obras %}
-      <li class="ficha-tarjeta" data-id="{{ o.id }}">
-        <a class="tarjeta" href="{{ enlace('obras/' ~ o.id ~ '/') }}">
-          {{ portada(o, recurso, 'portada-mini') }}
-          <div class="tarjeta-cuerpo">
-            <p class="tarjeta-sig">{{ o.formato|join(', ') }}{% if o.anio %} · {{ o.anio }}{% endif %}</p>
-            <h2 class="tarjeta-titulo">{{ o.titulo }}</h2>
-            <p class="tarjeta-autoria">{{ o.autoria }}{% if o.pais %} <span>— {{ o.pais|join(', ') }}</span>{% endif %}</p>
-            <ul class="tarjeta-sellos">
-              {% for d in o.disidencias %}<li class="sello sello-dis">{{ d }}</li>{% endfor %}
-              {% for s in o.subgeneros %}<li class="sello">{{ s }}</li>{% endfor %}
-            </ul>
-          </div>
-          {% if o.revision %}<span class="marca-revision" title="{{ o.revision }}">en revisión</span>{% endif %}
-        </a>
+      <li class="ficha-tarjeta" data-id="{{ o.id }}"{% if o.oculta %} hidden{% endif %}>
+        {{ tarjeta(o, enlace, recurso) }}
       </li>
       {% endfor %}
     </ol>
