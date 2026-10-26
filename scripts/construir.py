@@ -64,7 +64,7 @@ BASES = {
 PORTADA_ANCHO = 600
 
 # Colores de tela para las portadas provisorias
-TELAS = ["#5c1f27", "#2f4032", "#27324a", "#6b4a1f", "#4a2a44", "#23403f", "#3b2a20", "#51302a"]
+TELAS = ["#3a1f4d", "#1f2a4f", "#4a1d3f", "#22344a", "#2d2350", "#173b45", "#3d2140", "#26264a"]
 
 avisos: list[str] = []
 
