@@ -40,7 +40,7 @@ jobs:
           fi
           git config user.name "archivo-andromeda[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git status --porcelain datos/obras.csv estatico
+          git add datos/obras.csv estatico
           git commit -m "Importar propuestas aprobadas del formulario"
           git push
 
