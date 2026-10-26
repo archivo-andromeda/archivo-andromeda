@@ -88,37 +88,46 @@ Pulsa **Commit changes**. El sitio se vuelve a publicar solo.
 
 En <https://forms.google.com> crea un formulario nuevo. **Usa estos títulos de pregunta**: el importador las reconoce por el comienzo del texto, así que puedes agregar una aclaración al final del título, pero no cambiar el principio. El orden no importa.
 
-Divide el formulario en **dos secciones** (botón *Agregar sección*): «Lo básico» con las preguntas 1 a 7 y «Más detalles (opcional)» con el resto. Solo título y autoría son obligatorias.
+Divide el formulario en **tres secciones** (botón *Agregar sección*): «La obra» con las preguntas 1 a 7, «Datos de publicación (opcional)» con las preguntas 8 a 17 y «Para terminar» con la 18. Solo título y autore son obligatorias.
 
-**Sección 1 · Lo básico**
+La primera sección reúne lo que más sirve que complete quien leyó la obra: el subgénero, las disidencias, los temas y la descripción. Los datos de publicación casi siempre se pueden encontrar en línea después.
+
+**Sección 1 · La obra**
 
 | # | Título de la pregunta | Tipo | Obligatoria | Opciones o ayuda |
 |---|---|---|---|---|
 | 1 | Título de la obra | Respuesta corta | Sí | |
-| 2 | Autoría | Respuesta corta | Sí | *Ayuda: «Si son varias personas, sepáralas con punto y coma. Usa el nombre actual de cada persona.»* |
-| 3 | Formato | Opción múltiple | | Novela · Nouvelle · Libro de cuentos · Antología · Cuento · Microficción · Poemario narrativo · *Otro* |
-| 4 | Publicado en | Respuesta corta | | *Ayuda: «Si es un cuento o una microficción: el nombre del libro, antología, revista o sitio donde se publicó.»* |
-| 5 | Año de publicación | Respuesta corta | | |
-| 6 | País | Respuesta corta | | *Ayuda: «Si son varios, sepáralos con comas»* |
-| 7 | Dónde conseguirla o leerla en línea | Respuesta corta | | *Ayuda: «Un enlace: la página de la editorial o, si se publicó en internet, el texto mismo.»* |
+| 2 | Autore | Respuesta corta | Sí | *Ayuda: «Si son varias personas, sepáralas con punto y coma. Usa el nombre actual de cada persona.»* |
+| 3 | Formato | Opción múltiple | | Novela · Novela corta · Libro de cuentos · Antología · Cuento · Microficción · Poemario narrativo · *Otro* |
+| 4 | Subgénero especulativo | Casillas | | Ciencia ficción · Weird · Distopía · Utopía · Gótico · Ucronía · Fantasía · Horror · Ficción climática · Postapocalíptico · Poesía especulativa · *Otro* |
+| 5 | Disidencias sexogenéricas representadas | Casillas | | Lésbica · Gay · Marica · Bisexual · Trans · Travesti · No binarie · Género fluido · Intersex · Asexual · Poliamor · Cuir · *Otro* |
+| 6 | Temas | Respuesta corta | | *Ayuda: «Algunas palabras clave, separadas por comas»* |
+| 7 | Descripción breve | Párrafo | | |
 
-**Sección 2 · Más detalles (opcional)**
+**Sección 2 · Datos de publicación (opcional)**
 
 | # | Título de la pregunta | Tipo | Opciones o ayuda |
 |---|---|---|---|
-| 8 | Editorx o compilación | Respuesta corta | *Ayuda: «Quién editó o compiló la antología o revista, si corresponde.»* |
-| 9 | Medio | Opción múltiple | Editorial · Autopublicación · Editorial cartonera · Fanzine · Plaquette · Revista impresa · Revista en línea · Blog o sitio personal · Redes sociales · *Otro* |
-| 10 | Editorial | Respuesta corta | |
-| 11 | Subgénero especulativo | Casillas | Ciencia ficción · Weird · Distopía · Utopía · Gótico · Ucronía · Fantasía · Horror · Ficción climática · Postapocalíptico · Poesía especulativa · *Otro* |
-| 12 | Disidencias sexogenéricas representadas | Casillas | Lésbica · Gay · Marica · Bisexual · Trans · Travesti · No binarie · Género fluido · Intersex · Asexual · Poliamor · Cuir · *Otro* |
-| 13 | Temas | Respuesta corta | *Ayuda: «Algunas palabras clave, separadas por comas»* |
-| 14 | Descripción breve | Párrafo | |
+| 8 | Publicado en | Respuesta corta | *Ayuda: «Si es un cuento o una microficción: el nombre del libro, antología, revista o sitio donde se publicó.»* |
+| 9 | Año de publicación | Respuesta corta | |
+| 10 | País | Respuesta corta | *Ayuda: «Si son varios, sepáralos con comas»* |
+| 11 | Medio | Opción múltiple | Editorial · Autopublicación · Editorial cartonera · Fanzine · Plaquette · Revista impresa · Revista en línea · Blog o web personal · Redes sociales · *Otro* |
+| 12 | Editorial | Respuesta corta | |
+| 13 | Editorx o compilación | Respuesta corta | *Ayuda: «Quién editó o compiló la antología o revista, si corresponde.»* |
+| 14 | Dónde conseguirla o leerla en línea | Respuesta corta | *Ayuda: «Un enlace: la página de la editorial o, si se publicó en internet, el texto mismo.»* |
 | 15 | Referencias: Goodreads, Tercera Fundación u otras bases | Respuesta corta | *Ayuda: «Enlaces a la ficha de la obra en bases de datos de libros.»* |
 | 16 | Otros enlaces: reseñas, entrevistas | Respuesta corta | |
 | 17 | Enlace a la imagen de portada | Respuesta corta | *Ayuda: «Un enlace directo a la imagen. También sirve un enlace de Google Drive compartido.»* |
+
+**Sección 3 · Para terminar**
+
+| # | Título de la pregunta | Tipo | Opciones o ayuda |
+|---|---|---|---|
 | 18 | Tu nombre o seudónimo (opcional) | Respuesta corta | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
 
-Al importar, el enlace de la pregunta 7 se guarda como **lectura en línea** si el medio es revista en línea, blog o redes sociales, y como **dónde conseguirla** en los demás casos.
+En las preguntas de opciones, el orden de las opciones da lo mismo: el importador lee el texto. Lo que importa es que cada opción coincida con una etiqueta de `datos/vocabulario.yml` o con uno de sus alias, y que ninguna lleve comas (Google separa con comas las casillas marcadas).
+
+Al importar, el enlace de la pregunta 14 se guarda como **lectura en línea** si el medio es revista en línea, blog o redes sociales, y como **dónde conseguirla** en los demás casos.
 
 > En **Configuración** del formulario, deja **desactivada** la opción de recopilar correos electrónicos: la hoja con las propuestas aprobadas será pública.
 
@@ -218,8 +227,8 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 | `editorx` | Quien edita o compila, separado por `;` | |
 | `anio` | Año de primera publicación | `2023` |
 | `pais` | Uno o varios, separados por `;` | `Argentina` |
-| `formato` | Del vocabulario: novela, nouvelle, libro de cuentos, antología, cuento, microficción, poemario narrativo | `novela` |
-| `medio` | Del vocabulario: editorial, autopublicación, editorial cartonera, fanzine, plaquette, revista impresa, revista en línea, blog o sitio personal, redes sociales | `editorial` |
+| `formato` | Del vocabulario: novela, novela corta, libro de cuentos, antología, cuento, microficción, poemario narrativo | `novela` |
+| `medio` | Del vocabulario: editorial, autopublicación, editorial cartonera, fanzine, plaquette, revista impresa, revista en línea, blog o web personal, redes sociales | `editorial` |
 | `publicado_en` | Para cuentos: el `id` o título de un libro del archivo, o el nombre de la antología, revista o web | `ciencia-ficcion-travesti` |
 | `subgeneros` | Varios, separados por `;` | `distopía; gótico` |
 | `disidencias` | Varios, separados por `;` | `lésbica` |
