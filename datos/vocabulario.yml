@@ -141,6 +141,38 @@ disidencias:
     descripcion: "Disidencias sexogenéricas en sentido amplio."
     alias: [queer, kuir, LGBTQ, lgbt]
 
+# Afectos: lo que la obra le hizo sentir a quien la leyó.
+afectos:
+  esperanza:
+    descripcion: "Abre un futuro posible, una salida, otra forma de estar juntes."
+  agobio:
+    descripcion: "Aprieta, angustia, deja sin aire."
+    alias: [angustia, ansiedad, opresión]
+  calentura:
+    descripcion: "Excita: el deseo se siente en el cuerpo."
+    alias: [excitación, arrechura, cachondez]
+  congoja:
+    descripcion: "Una pena honda; dan ganas de llorar."
+    alias: [tristeza, pena, melancolía]
+  ternura:
+    descripcion: "Conmueve con suavidad; dan ganas de cuidar."
+    alias: [cariño]
+  mariposas:
+    descripcion: "Enamora: un revoloteo en el estómago."
+    alias: [enamoramiento, flechazo]
+  rabia:
+    descripcion: "Indigna, enfurece, dan ganas de romper algo."
+    alias: [ira, enojo, indignación, bronca]
+  asco:
+    descripcion: "Repele, revuelve el estómago."
+    alias: [repulsión, repugnancia]
+  extrañeza:
+    descripcion: "Desconcierta: algo no calza y no se sabe bien qué."
+    alias: [extrañamiento, desconcierto, perplejidad]
+  curiosidad:
+    descripcion: "Engancha; dan ganas de saber más."
+    alias: [intriga]
+
 # Los temas son etiquetas libres: no necesitan estar en el vocabulario.
 # Si quieres unificar variantes, agrega aquí un alias.
 temas:
