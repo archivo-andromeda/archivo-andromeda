@@ -36,9 +36,9 @@ RAIZ = Path(__file__).resolve().parent.parent
 OBRAS = RAIZ / "datos" / "obras.csv"
 PORTADAS = RAIZ / "estatico" / "portadas"
 COLUMNAS = ["id", "titulo", "autoria", "editorx", "anio", "pais", "formato", "medio", "publicado_en",
-            "subgeneros", "disidencias", "temas", "editorial", "descripcion", "portada",
+            "subgeneros", "disidencias", "afectos", "temas", "editorial", "descripcion", "portada",
             "conseguir", "leer_en_linea", "referencias", "enlace", "propuesta_por", "revision"]
-MULTIPLES = {"pais", "subgeneros", "disidencias", "temas", "formato", "medio"}   # separados por ; o ,
+MULTIPLES = {"pais", "subgeneros", "disidencias", "afectos", "temas", "formato", "medio"}   # separados por ; o ,
 PERSONAS = {"autoria", "editorx"}                                                 # separados por ; o ,
 ENLACES = {"donde", "referencias", "enlace"}                                     # separados por ; , o espacios
 
@@ -59,6 +59,7 @@ PREGUNTAS = [
     ("publicado_en", ["publicado en", "publicada en", "publicado"]),
     ("subgeneros", ["subgenero"]),
     ("disidencias", ["disidencia"]),
+    ("afectos", ["afecto", "que te hizo sentir"]),
     ("temas", ["tema"]),
     ("editorial", ["editorial"]),
     ("descripcion", ["descripcion", "resena"]),
