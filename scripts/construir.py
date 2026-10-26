@@ -37,14 +37,15 @@ LIMPIAS = "--limpias" in sys.argv
 DIMENSIONES = {
     "subgeneros": ("subgeneros", "Subgénero", "sub"),
     "disidencias": ("disidencias", "Disidencia", "dis"),
+    "afectos": ("afectos", "Afecto", "afe"),
     "formato": ("formato", "Formato", "for"),
     "medio": ("medio", "Medio", "med"),
     "pais": ("pais", "País", "pai"),
     "decada": (None, "Década", "dec"),
     "temas": ("temas", "Temas", "tem"),
 }
-CONTROLADAS = {"subgeneros", "disidencias", "formato", "medio"}
-VOCAB_CLAVE = {"subgeneros": "subgeneros", "disidencias": "disidencias", "formato": "formatos",
+CONTROLADAS = {"subgeneros", "disidencias", "afectos", "formato", "medio"}
+VOCAB_CLAVE = {"subgeneros": "subgeneros", "disidencias": "disidencias", "afectos": "afectos", "formato": "formatos",
                "medio": "medios", "temas": "temas"}
 PARAM_PUBLICACION = "pub"  # ?pub=… muestra lo publicado en una misma antología, revista o web
 
@@ -61,7 +62,7 @@ BASES = {
 }
 
 # Obras relacionadas: puntos por cada coincidencia, cuántas mostrar y puntaje mínimo
-PESOS_RELACION = {"autoria": 5, "disidencias": 3, "subgeneros": 2, "temas": 2, "pais": 1, "decada": 1}
+PESOS_RELACION = {"autoria": 5, "disidencias": 3, "subgeneros": 2, "temas": 2, "afectos": 1, "pais": 1, "decada": 1}
 RELACIONADAS_MAX = 3
 RELACIONADAS_MINIMO = 4
 
@@ -246,6 +247,7 @@ def cargar_obras(mapas, actual) -> list[dict]:
                 "tela": color_tela(ident),
                 "subgeneros": normalizar("subgeneros", separar(fila.get("subgeneros", "")), mapas, titulo),
                 "disidencias": normalizar("disidencias", separar(fila.get("disidencias", "")), mapas, titulo),
+                "afectos": normalizar("afectos", separar(fila.get("afectos", "")), mapas, titulo),
                 "formato": normalizar("formato", separar(fila.get("formato", "")), mapas, titulo),
                 "medio": normalizar("medio", separar(fila.get("medio", "")), mapas, titulo),
                 "temas": normalizar("temas", separar(fila.get("temas", "")), mapas, titulo),
@@ -299,7 +301,7 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
         }
         o["texto"] = clave(" ".join([
             o["titulo"], o["autoria"], o["editorx"], o["editorial"], o["descripcion"], o["anio"],
-            o["pub_nombre"], *o["pais"], *o["temas"], *o["subgeneros"], *o["disidencias"],
+            o["pub_nombre"], *o["pais"], *o["temas"], *o["subgeneros"], *o["disidencias"], *o["afectos"],
             *o["formato"], *o["medio"],
         ]))
         # Lo que basta para encontrar una obra oculta escribiendo su nombre
@@ -309,7 +311,7 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
 def relacionar(obras: list[dict]) -> None:
     """Calcula hasta RELACIONADAS_MAX obras relacionadas para cada ficha.
 
-    Suma puntos por autoría, disidencias, subgéneros y temas compartidos, país y década.
+    Suma puntos por autoría, disidencias, subgéneros, temas y afectos compartidos, país y década.
     No relaciona un cuento con su propio libro ni cuentos del mismo libro entre sí
     (eso ya aparece en «Cuentos de este libro»).
     """
@@ -326,7 +328,7 @@ def relacionar(obras: list[dict]) -> None:
             if personas_o & {p["id"] for p in c["autoras"]}:
                 puntos += PESOS_RELACION["autoria"]
                 comparte.append("autore")
-            for d in ("disidencias", "subgeneros", "temas"):
+            for d in ("disidencias", "subgeneros", "temas", "afectos"):
                 comunes = [v for v in o[d] if v in c[d]]
                 puntos += PESOS_RELACION[d] * len(comunes)
                 comparte += comunes
