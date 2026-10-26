@@ -43,5 +43,4 @@ jobs:
           git add datos/obras.csv estatico/portadas
           git commit -m "Importar propuestas aprobadas del formulario"
           git push
-          git commit -m "Importar propuestas aprobadas del formulario"
-          git push
+
