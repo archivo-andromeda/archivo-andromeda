@@ -60,6 +60,7 @@ main { max-width: var(--ancho); margin: 0 auto; padding: 0 24px 4rem; }
 .sello-boton[data-dim="formato"], .sello-boton[data-dim="medio"], .sello-boton[data-dim="pais"], .sello-boton[data-dim="decada"],
 .sello-formato, .sello-medio, .sello-pais, .sello-decada, .sello-propio { --c: var(--c-geo); }
 .sello-boton[data-dim="temas"], .sello-temas, .nube .sello { --c: var(--c-tem); }
+.sello-boton[data-dim="afectos"], .sello-afectos { --c: var(--c-afe); }
 .activo { --c: var(--acento); }
 
 .sello {
@@ -290,9 +291,9 @@ code { font-family: var(--mono); font-size: .85em; background: var(--panel); pad
   --linea: #35322e;  --linea-ancho: 1px;
   --texto: #f2ede3;  --texto-2: #b5ada0;  --texto-3: #857d71;
   /* tintas */
-  --violeta: #a985ff;  --fucsia: #e8559c;  --azul: #5b84ef;  --lima: #c5ec4a;
+  --violeta: #a985ff;  --fucsia: #e8559c;  --azul: #5b84ef;  --lima: #c5ec4a;  --naranja: #ff8a3d;
   --acento: var(--violeta); --boton-txt: #121110; --logo: var(--violeta); --destacado: var(--lima);
-  --c-dis: var(--fucsia);  --c-sub: var(--violeta);  --c-geo: var(--azul);  --c-tem: var(--lima);
+  --c-dis: var(--fucsia);  --c-sub: var(--violeta);  --c-geo: var(--azul);  --c-tem: var(--lima);  --c-afe: var(--naranja);
   --sello-on: #121110; --sello-caja: lowercase;
   --revision: var(--fucsia); --revision-txt: #121110; --revision-giro: rotate(-5deg);
 
