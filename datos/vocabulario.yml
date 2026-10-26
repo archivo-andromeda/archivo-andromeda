@@ -14,9 +14,9 @@
 formatos:
   novela:
     descripcion: "Narración extensa de una sola autoría."
-  nouvelle:
-    descripcion: "Novela breve o novela corta."
-    alias: [novelle, novela corta, novela breve]
+  novela corta:
+    descripcion: "Narración más breve que una novela; en otras tradiciones, nouvelle."
+    alias: [nouvelle, novelle, novela breve]
   libro de cuentos:
     descripcion: "Colección de relatos de una misma autoría."
     alias: [cuentos, relatos, libro de relatos, colección de cuentos]
@@ -59,9 +59,9 @@ medios:
     descripcion: "Revista o publicación periódica digital."
     alias: [revista en linea, revista digital, revista web]
     en_linea: true
-  blog o sitio personal:
+  blog o web personal:
     descripcion: "Publicada en un blog o una web propia."
-    alias: [blog, sitio personal, sitio web, web personal]
+    alias: [blog o sitio personal, blog, sitio personal, sitio web, web personal]
     en_linea: true
   redes sociales:
     descripcion: "Publicada en redes, por ejemplo como hilo o serie de posts."
