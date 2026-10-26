@@ -176,6 +176,12 @@ El importador nunca duplica: si una obra ya está en el catálogo (mismo título
 
 Cuando hayas revisado una obra, borra el texto de su columna `revision` y desaparece el sello «en revisión».
 
+Solo las fichas confirmadas participan en la **obra del día** de la portada. El sitio elige una cada día (a medianoche, hora de Chile) y la muestra igual a todo el mundo; si todavía no hay ninguna ficha confirmada, el bloque no aparece.
+
+### Obras relacionadas
+
+Cada ficha muestra hasta 3 obras relacionadas, calculadas solas al publicar. Suman puntos la misma autoría (5), cada disidencia compartida (3), cada subgénero y cada tema compartido (2), el mismo país (1) y la misma década (1); se muestran las que tienen 4 puntos o más, con lo que comparten. Los pesos se cambian al comienzo de `scripts/construir.py` (`PESOS_RELACION`, `RELACIONADAS_MAX`, `RELACIONADAS_MINIMO`).
+
 ### Agregar portadas
 
 - **Desde el formulario:** si la propuesta trae un enlace a la imagen, el importador la descarga, la achica y la guarda sola en `estatico/portadas/<id>.webp`. Si no puede, lo anota en la columna `revision`.

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_tarjeta.html" import tarjeta %}
+{% from "_portada.html" import portada %}
 {% block clase_body %}pag-catalogo{% endblock %}
 
 {% block contenido %}
@@ -8,6 +9,25 @@
   <h1>Un archivo de imaginaciones disidentes</h1>
   <p class="intro-texto">Novelas, cuentos y poemarios narrativos de ciencia ficción, fantasía, horror y otras ficciones especulativas escritas desde América Latina y atravesadas por deseos e identidades LGBTQ+. Busca por título o autoría, o combina etiquetas para recorrer el archivo.</p>
 </section>
+
+{% if del_dia %}
+<section class="obra-dia" id="obra-dia" aria-labelledby="obra-dia-titulo" hidden>
+  <h2 class="obra-dia-etiqueta" id="obra-dia-titulo">Obra del día</h2>
+  {% for o in del_dia %}
+  <a class="obra-dia-enlace" href="{{ enlace('obras/' ~ o.id ~ '/') }}" data-dia="{{ loop.index0 }}" hidden>
+    {{ portada(o, recurso, 'portada-dia') }}
+    <div class="obra-dia-cuerpo">
+      <p class="obra-dia-titulo">{{ o.titulo }}</p>
+      <p class="obra-dia-autoria">{{ o.autoria }}</p>
+      <ul class="tarjeta-sellos">
+        {% for d in o.disidencias %}<li class="sello sello-dis">{{ d }}</li>{% endfor %}
+        {% for s in o.subgeneros %}<li class="sello">{{ s }}</li>{% endfor %}
+      </ul>
+    </div>
+  </a>
+  {% endfor %}
+</section>
+{% endif %}
 
 <div class="catalogo">
   <aside class="filtros" aria-label="Filtros">

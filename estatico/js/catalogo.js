@@ -190,6 +190,18 @@
     };
   });
 
+  // Obra del día: la misma para todo el mundo durante un día (hora de Chile)
+  const bloqueDia = document.getElementById("obra-dia");
+  if (bloqueDia) {
+    const opciones = bloqueDia.querySelectorAll("[data-dia]");
+    const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Santiago" }).format(new Date());
+    const dia = Math.floor(Date.parse(hoy + "T00:00:00Z") / 86400000);
+    if (opciones.length && !isNaN(dia)) {
+      opciones[dia % opciones.length].hidden = false;
+      bloqueDia.hidden = false;
+    }
+  }
+
   // En pantallas chicas, los filtros empiezan cerrados (salvo que haya alguno activo)
   leerURL();
   const plegable = document.querySelector(".filtros-plegable");

@@ -60,6 +60,11 @@ BASES = {
     "wikidata.org": "Wikidata",
 }
 
+# Obras relacionadas: puntos por cada coincidencia, cuántas mostrar y puntaje mínimo
+PESOS_RELACION = {"autoria": 5, "disidencias": 3, "subgeneros": 2, "temas": 2, "pais": 1, "decada": 1}
+RELACIONADAS_MAX = 3
+RELACIONADAS_MINIMO = 4
+
 # Ancho máximo (en píxeles) de las portadas publicadas
 PORTADA_ANCHO = 600
 
@@ -301,6 +306,43 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
         o["texto_corto"] = clave(" ".join([o["titulo"], o["autoria"]]))
 
 
+def relacionar(obras: list[dict]) -> None:
+    """Calcula hasta RELACIONADAS_MAX obras relacionadas para cada ficha.
+
+    Suma puntos por autoría, disidencias, subgéneros y temas compartidos, país y década.
+    No relaciona un cuento con su propio libro ni cuentos del mismo libro entre sí
+    (eso ya aparece en «Cuentos de este libro»).
+    """
+    def familia(o):
+        return o["contenedor"]["id"] if o["contenedor"] else o["id"]
+
+    for o in obras:
+        personas_o = {p["id"] for p in o["autoras"]}
+        candidatas = []
+        for c in obras:
+            if c is o or familia(c) == familia(o):
+                continue
+            comparte, puntos = [], 0
+            if personas_o & {p["id"] for p in c["autoras"]}:
+                puntos += PESOS_RELACION["autoria"]
+                comparte.append("misma autoría")
+            for d in ("disidencias", "subgeneros", "temas"):
+                comunes = [v for v in o[d] if v in c[d]]
+                puntos += PESOS_RELACION[d] * len(comunes)
+                comparte += comunes
+            for d in ("pais", "decada"):
+                comunes = [v for v in o[d] if v in c[d]]
+                if comunes:
+                    puntos += PESOS_RELACION[d]
+                    comparte += [f"años {v[:4]}" if d == "decada" else v for v in comunes]
+            if puntos >= RELACIONADAS_MINIMO:
+                cercania = abs(int(o["anio"] or 0) - int(c["anio"] or 0)) if (o["anio"] + c["anio"]).isdigit() else 999
+                candidatas.append((-puntos, cercania, clave(c["titulo"]), c, comparte))
+        candidatas.sort(key=lambda x: x[:3])
+        o["relacionadas"] = [{"obra": c, "comparte": comparte}
+                             for *_, c, comparte in candidatas[:RELACIONADAS_MAX]]
+
+
 def facetas(obras) -> list[dict]:
     salida = []
     for dim, (_, nombre, param) in DIMENSIONES.items():
@@ -353,6 +395,7 @@ def main() -> int:
     actual, _fichas_autores = cargar_autores()  # las fichas de autores vendrán después
     obras = cargar_obras(mapas, actual)
     enlazar_publicaciones(obras)
+    relacionar(obras)
     fac = facetas(obras)
 
     if SALIDA.exists():
@@ -406,7 +449,10 @@ def main() -> int:
     ]
     a_js = lambda d: json.dumps(d, ensure_ascii=False).replace("</", "<\\/")
     params = {d: p for d, (_, _, p) in DIMENSIONES.items()}
-    escribir("index.html", "catalogo.html", obras=obras, facetas=fac,
+    # Obra del día: solo fichas revisadas (sin texto en «revision») y visibles en el catálogo.
+    # El navegador elige una según la fecha en Chile; si no hay ninguna, el bloque no aparece.
+    del_dia = sorted((o for o in obras if not o["revision"] and not o["oculta"]), key=lambda o: o["id"])
+    escribir("index.html", "catalogo.html", obras=obras, facetas=fac, del_dia=del_dia,
              datos_json=a_js(datos_js),
              params_json=a_js({"dims": params, "pub": PARAM_PUBLICACION}))
 

@@ -97,6 +97,15 @@
 </section>
 {% endif %}
 
+{% if obra.relacionadas %}
+<section class="contenidos relacionadas" aria-labelledby="relacionadas-titulo">
+  <h2 id="relacionadas-titulo">Obras relacionadas</h2>
+  <ol class="fichero fichero-contenidos">
+    {% for r in obra.relacionadas %}<li class="ficha-tarjeta">{{ tarjeta(r.obra, enlace, recurso, nota='comparte: ' ~ r.comparte|join(' · ')) }}</li>{% endfor %}
+  </ol>
+</section>
+{% endif %}
+
 {% if anterior or siguiente %}
 <nav class="vecinas" aria-label="Otras obras">
   {% if anterior %}<a class="vecina vecina-ant" href="{{ enlace('obras/' ~ anterior.id ~ '/') }}"><span>← anterior{% if obra.contenedor %} en este libro{% endif %}</span>{{ anterior.titulo }}</a>{% else %}<span></span>{% endif %}
