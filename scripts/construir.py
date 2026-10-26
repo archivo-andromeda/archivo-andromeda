@@ -325,7 +325,7 @@ def relacionar(obras: list[dict]) -> None:
             comparte, puntos = [], 0
             if personas_o & {p["id"] for p in c["autoras"]}:
                 puntos += PESOS_RELACION["autoria"]
-                comparte.append("misma autoría")
+                comparte.append("autore")
             for d in ("disidencias", "subgeneros", "temas"):
                 comunes = [v for v in o[d] if v in c[d]]
                 puntos += PESOS_RELACION[d] * len(comunes)
