@@ -3,20 +3,20 @@ titulo: Acerca del archivo
 cajon: Cajón III · Notas de la curadora
 ---
 
-El **Archivo Andrómeda** es un catálogo comunitario de literatura especulativa LGBTQ+ escrita desde América Latina: novelas, cuentos, antologías y poemarios narrativos que imaginan otros mundos desde los cuerpos, deseos y afectos disidentes.
+El **Archivo Andrómeda** es un catálogo literatura especulativa LGBTQ+ escrita desde América Latina. Incluye novelas, cuentos, antologías y poemarios narrativos.
+El fin último de Archivo Andrómeda es almacenar y organizar las obras de modo de poner a disposición pública el universo de imaginaciones lgbtq+ que se han construido en nuestro territorio.
 
-Nace como un proyecto paralelo a una investigación doctoral sobre la *esperanza cuir* en la ficción especulativa latinoamericana contemporánea, y con una convicción sencilla: estas obras existen, son muchas y merecen encontrarse.
+## ¿Qué obras son parte del catálogo? 
+Las obras de Archivo Andrómeda se ubican en la intersección de tres ejes:
 
-## Qué entra al archivo
-
-- Obras de autoría latinoamericana (incluidas las diásporas), en cualquier lengua.
+- Autoría latinoamericana.
 - Ficciones especulativas en sentido amplio: ciencia ficción, fantasía, horror, weird, distopía, ucronía y sus mezclas.
-- Obras donde las disidencias sexogenéricas tengan un lugar significativo, ya sea en sus personajes, sus mundos o su manera de narrar.
+- Lo LGBTQ+: Obras donde las disidencias sexogenéricas tengan un lugar significativo, ya sea en sus personajes, sus mundos o su manera de narrar. 
 
-## Cómo se construye
-
+## ¿Cómo se construye?
+Las obras en Andrómeda agregadas por la comunidad através del formulario.
 Cada ficha se arma con información de editoriales, reseñas y propuestas de lectoras y lectores. Las fichas marcadas **en revisión** tienen etiquetas propuestas que todavía no han sido confirmadas con una lectura completa de la obra.
 
-Las etiquetas siguen un [vocabulario](../vocabulario/index.html) abierto: nombrar es una decisión política y estamos dispuestas a revisarla.
+Las etiquetas siguen un [vocabulario](../vocabulario/index.html) abierto: nombrar es una decisión política en constante revisión.
 
-*Este texto es un borrador y puede editarse en el archivo `paginas/acerca.md`.*
+
