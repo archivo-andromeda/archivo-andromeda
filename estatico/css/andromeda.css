@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Hanken+Grotesk:ital,wght@0,400..700;1,400..700&family=DM+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Hanken+Grotesk:ital,wght@0,400..700;1,400..700&family=DM+Mono:wght@400;500&display=swap");
 /* ═══ ESTRUCTURA COMÚN (todas las variantes) ═══════════════ */
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -246,9 +246,10 @@ code { font-family: var(--mono); font-size: .85em; background: var(--panel); pad
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 /* ═══════════════════════════════════════════════════════════
-   ARCHIVO ANDRÓMEDA · variante RISO
+   ARCHIVO ANDRÓMEDA · variante RISO «violeta ácido»
    Fanzine impreso en risografía: tintas planas que se
-   desfasan en los titulares, tramas de puntos y stickers.
+   desfasan en los titulares, tramas de puntos y stickers,
+   sobre un fondo negro con polvillo de color.
    ═══════════════════════════════════════════════════════════ */
 
 :root {
@@ -256,42 +257,68 @@ code { font-family: var(--mono); font-size: .85em; background: var(--panel); pad
   --fondo: #121110;  --panel: #1a1918;  --panel-2: #23211f;
   --linea: #35322e;  --linea-ancho: 1px;
   --texto: #f2ede3;  --texto-2: #b5ada0;  --texto-3: #857d71;
-  /* tintas riso */
-  --rojo: #e8505b;  --azul: #5b80dd;  --amarillo: #f2b33d;  --verde: #35a893;
-  --acento: var(--amarillo); --boton-txt: #121110;
-  --c-dis: var(--rojo);  --c-sub: var(--amarillo);  --c-geo: var(--verde);  --c-tem: var(--azul);
+  /* tintas */
+  --violeta: #a985ff;  --fucsia: #e8559c;  --azul: #5b84ef;  --lima: #c5ec4a;
+  --acento: var(--violeta); --boton-txt: #121110; --logo: var(--violeta);
+  --c-dis: var(--fucsia);  --c-sub: var(--violeta);  --c-geo: var(--azul);  --c-tem: var(--lima);
   --sello-on: #121110; --sello-caja: lowercase;
-  --revision: var(--rojo); --revision-txt: #121110; --revision-giro: rotate(-5deg);
+  --revision: var(--fucsia); --revision-txt: #121110; --revision-giro: rotate(-5deg);
 
-  --display: "Syne", "Arial Black", sans-serif;
+  --display: "Archivo", "Arial Narrow", sans-serif;
   --cuerpo: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   --mono: "DM Mono", ui-monospace, monospace;
-  --display-peso: 600; --display-ancho: 100%; --display-caja: uppercase; --display-tracking: .01em;
-  --display-sombra: .05em .04em 0 color-mix(in srgb, var(--rojo) 85%, transparent), -.03em -.02em 0 color-mix(in srgb, var(--azul) 70%, transparent);
+  --display-peso: 800; --display-ancho: 68%; --display-caja: uppercase; --display-tracking: 0;
+  --display-sombra: .05em .04em 0 color-mix(in srgb, var(--violeta) 85%, transparent), -.03em -.02em 0 color-mix(in srgb, var(--fucsia) 70%, transparent);
 
   --radio: 6px; --radio-sello: 4px; --radio-portada: 4px;
   --tarjeta-sombra: none; --tarjeta-hover: translateY(-3px); --tarjeta-sombra-hover: 0 10px 30px -12px rgba(0,0,0,.8);
   --fichero-gap: 1.2rem; --ancho: 1240px;
 }
-.intro h1, .texto h1 { font-size: clamp(1.9rem, 4.6vw, 3.5rem); line-height: 1.02; }
-.ficha-cabecera h1 { font-size: clamp(1.9rem, 4.2vw, 3.2rem); line-height: 1.02; }
-.tarjeta-titulo { font-size: 1.12rem; line-height: 1.08; }
-.tarjeta-titulo, .vecina, .tela-titulo { text-shadow: .045em .04em 0 color-mix(in srgb, var(--rojo) 80%, transparent); }
+
+/* Polvillo de color en el fondo */
+body {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(197,236,74,.55) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 63% 41%, rgba(169,133,255,.5) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 37% 77%, rgba(197,236,74,.4) 0 1.2px, transparent 1.8px),
+    radial-gradient(circle at 86% 64%, rgba(232,85,156,.4) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 75% 9%, rgba(197,236,74,.35) 0 .8px, transparent 1.3px);
+  background-size: 173px 173px, 241px 241px, 307px 307px, 389px 389px, 131px 131px;
+}
+
+/* Cabecera: el nombre como protagonista */
+.cabecera { padding: 1.7rem 24px 1.4rem; }
+.marca { gap: 1rem; }
+.constelacion { width: 54px; height: 54px; color: var(--logo); }
+.marca-texto { gap: .4rem; }
+.marca-nombre { font-size: clamp(1.9rem, 3.6vw, 2.7rem); line-height: .9; }
+.marca-lema { font-size: .72rem; }
+
+/* Titulares */
+.intro { padding: 2.2rem 0 2rem; }
+.intro h1, .texto h1 { font-size: clamp(1.9rem, 3.8vw, 2.9rem); line-height: .95; }
+.ficha-cabecera h1 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: .95; }
+.tarjeta-titulo { font-size: 1.42rem; line-height: 1; }
+.tarjeta-titulo, .vecina, .tela-titulo { text-shadow: .045em .04em 0 color-mix(in srgb, var(--violeta) 80%, transparent); }
+.vecina { font-size: 1.3rem; }
+.faceta legend { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: .82rem; letter-spacing: .04em; }
+
+/* Etiquetas */
 .marca-revision, .sello-revision { border-radius: 4px; }
 .sello { border: 0; padding: .24rem .6rem; }
 .sello-boton { color: var(--c); box-shadow: inset 0 0 0 1.5px var(--c); }
 .sello-boton[aria-pressed="true"] { box-shadow: none; }
-.faceta legend { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: .82rem; letter-spacing: .04em; }
+
 /* Portadas provisorias: trama de puntos + círculo sobreimpreso */
 .portada-tela { background-color: var(--tela); color: var(--texto); isolation: isolate; }
 .portada-tela::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background-image: radial-gradient(var(--rojo) 30%, transparent 33%); background-size: 6px 6px;
+  background-image: radial-gradient(var(--violeta) 30%, transparent 33%); background-size: 6px 6px;
   -webkit-mask-image: linear-gradient(200deg, #000 15%, transparent 70%); mask-image: linear-gradient(200deg, #000 15%, transparent 70%);
 }
 .portada-tela::after {
   content: ""; position: absolute; z-index: -1; width: 70%; aspect-ratio: 1; right: -18%; bottom: 8%;
-  border-radius: 50%; background: var(--amarillo); mix-blend-mode: screen; opacity: .85;
+  border-radius: 50%; background: var(--lima); mix-blend-mode: screen; opacity: .7;
 }
 .tela-etiqueta { position: relative; justify-content: space-between; }
 .tela-titulo { font-size: .64rem; overflow-wrap: normal; letter-spacing: -.03em; }
@@ -304,8 +331,10 @@ code { font-family: var(--mono); font-size: .85em; background: var(--panel); pad
   background-image: radial-gradient(color-mix(in srgb, var(--c) 55%, #fff) 24%, transparent 29%);
   background-size: 4px 4px;
 }
-.marca-revision, .sello-revision { --c: var(--rojo); }
+.marca-revision, .sello-revision { --c: var(--revision); }
 .sello:not(.sello-boton), .sello-boton[aria-pressed="true"] { font-weight: 500; }
 
-.marca-nombre { font-size: 1.3rem; }
-.vecina { font-size: 1rem; }
+@media (max-width: 560px) {
+  .marca-nombre { font-size: 1.9rem; }
+  .constelacion { width: 40px; height: 40px; }
+}
