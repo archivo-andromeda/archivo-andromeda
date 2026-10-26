@@ -12,7 +12,7 @@ url_sitio: "https://archivo-andromeda.github.io/archivo-andromeda"
 
 # Enlace al Google Form para proponer obras (el enlace largo o el corto forms.gle/...).
 # Mientras esté vacío, la página "Proponer una obra" mostrará un aviso.
-formulario_url: ""
+formulario_url: "https://forms.gle/vtmChzjUD1wiLhrW7"
 
 # Correo o red de contacto (opcional). Déjalo vacío para no mostrarlo.
 contacto: "archivo.andromeda@gmail.com"
