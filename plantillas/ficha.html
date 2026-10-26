@@ -51,7 +51,7 @@
     <div class="tarjeta-catalogo">
       {% if obra.revision %}<span class="sello-revision" title="{{ obra.revision }}">Ficha en revisión</span>{% endif %}
       <dl class="tabla">
-        <div><dt>Autoría</dt><dd>{{ obra.autoria }}</dd></div>
+        <div><dt>{% if obra.autoras|length > 1 %}Autores{% else %}Autore{% endif %}</dt><dd>{{ obra.autoria }}</dd></div>
         {% if obra.editorx %}<div><dt>Editorx</dt><dd>{{ obra.editorx }}</dd></div>{% endif %}
         <div><dt>Año</dt><dd>{{ obra.anio or '—' }}</dd></div>
         <div><dt>País</dt><dd>{% if obra.pais %}{{ sellos('pais', obra.pais) }}{% else %}—{% endif %}</dd></div>
