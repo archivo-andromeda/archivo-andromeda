@@ -33,7 +33,7 @@
   <aside class="filtros" aria-label="Filtros">
     <details class="filtros-plegable" open>
       <summary>Filtrar por etiquetas</summary>
-      {% for f in facetas %}
+      {% for f in facetas if f.valores %}
       <fieldset class="faceta" data-dim="{{ f.dim }}">
         <legend>{{ f.nombre }}</legend>
         <div class="faceta-valores{% if f.valores|length > 8 %} faceta-larga{% endif %}">
