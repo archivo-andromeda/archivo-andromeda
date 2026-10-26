@@ -9,10 +9,9 @@ Cada propuesta se revisa antes de publicarse, así que puede tardar un tiempo en
 
 ## Qué te vamos a preguntar
 
-- **Título y autoría** (lo único obligatorio).
-- Formato, año y país. Si es un **cuento o una microficción**, dónde se publicó: un libro, una antología, una revista o un sitio web.
-- Un enlace para **conseguirla o leerla en línea**.
-- Si quieres seguir: quién la editó o compiló, el medio y la editorial, el **subgénero especulativo** y las **disidencias** que aparecen en la obra, algunos **temas** y una descripción breve con tus palabras.
-- Enlaces a bases de datos como Goodreads o Tercera Fundación, reseñas o entrevistas y, si lo tienes, un enlace a la imagen de portada.
+- **Título y autore** (lo único obligatorio) y el formato: novela, novela corta, libro de cuentos, cuento…
+- Lo que más nos importa saber de quien la leyó: el **subgénero especulativo**, las **disidencias** que aparecen en la obra, algunos **temas** y una descripción breve con tus palabras.
+- Si quieres seguir, los datos de publicación: dónde se publicó (si es un **cuento o una microficción**: el libro, la antología, la revista o el sitio web), año, país, medio, editorial y quién la editó o compiló.
+- Un enlace para **conseguirla o leerla en línea**, enlaces a bases de datos como Goodreads o Tercera Fundación, reseñas o entrevistas y, si lo tienes, un enlace a la imagen de portada.
 
-No es necesario completar todo: con el título y la autoría podemos empezar a investigar.
+No es necesario completar todo: con el título y el nombre de quien la escribió podemos empezar a investigar.
