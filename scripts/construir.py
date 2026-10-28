@@ -268,6 +268,10 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
     Si «publicado_en» coincide con el id o el título de una ficha del archivo,
     se enlazan en ambos sentidos y el cuento se oculta del catálogo por defecto
     (aparece al filtrar por su formato y en la ficha del libro).
+
+    Excepción: si el libro no tiene disidencias propias y alguno de sus cuentos sí
+    (un libro con un solo cuento LGBTQ+, por ejemplo), se rota: se esconde el libro
+    y se muestran sus cuentos.
     """
     por_id = {o["id"]: o for o in obras}
     por_titulo = {clave(o["titulo"]): o for o in obras}
@@ -289,6 +293,12 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
                          portada_heredada=True)
         else:
             o["pub"], o["pub_nombre"] = slug(valor), valor
+
+    for o in obras:
+        if o["contenidos"] and not o["disidencias"] and any(c["disidencias"] for c in o["contenidos"]):
+            o["oculta"] = True
+            for c in o["contenidos"]:
+                c["oculta"] = False
 
     for o in obras:
         o["contenidos"].sort(key=lambda c: (c["anio"] or "9999", clave(c["titulo"])))
@@ -447,6 +457,7 @@ def main() -> int:
     datos_js = [
         {k: o[k] for k in ("id", "titulo", "autoria", "anio", "texto", "texto_corto",
                            "oculta", "pub", "pub_nombre", *DIMENSIONES.keys())}
+        | {"es_libro": bool(o["contenidos"])}
         for o in obras
     ]
     a_js = lambda d: json.dumps(d, ensure_ascii=False).replace("</", "<\\/")
@@ -460,7 +471,12 @@ def main() -> int:
 
     visibles = [o for o in obras if not o["oculta"]]
     for o in obras:
-        serie = o["contenedor"]["contenidos"] if o["oculta"] else visibles
+        if not o["oculta"]:
+            serie = visibles
+        elif o["contenedor"]:
+            serie = o["contenedor"]["contenidos"]
+        else:
+            serie = [o]  # libro escondido porque se muestran sus cuentos: sin anterior/siguiente
         i = serie.index(o)
         anterior = serie[i - 1] if i > 0 else None
         siguiente = serie[i + 1] if i < len(serie) - 1 else None
@@ -479,7 +495,7 @@ def main() -> int:
 
     ocultas = sum(o["oculta"] for o in obras)
     print(f"✓ Sitio construido en _site/ con {len(obras)} obras"
-          + (f" ({ocultas} dentro de libros del archivo)." if ocultas else "."))
+          + (f" ({ocultas} {'escondida' if ocultas == 1 else 'escondidas'} por defecto en el catálogo)." if ocultas else "."))
     if Image is None:
         print("  (Pillow no está instalado: las portadas se publicaron sin achicar.)")
     if avisos:
