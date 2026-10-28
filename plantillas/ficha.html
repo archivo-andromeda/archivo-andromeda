@@ -4,7 +4,7 @@
 {% block titulo %}{{ obra.titulo }} · {{ obra.autoria }} — {{ sitio.nombre }}{% endblock %}
 {% block descripcion %}{{ (obra.descripcion or (obra.titulo ~ ', de ' ~ obra.autoria ~ (' (' ~ obra.pais|join(', ') ~ ', ' ~ obra.anio ~ ')' if obra.anio else '') ~ '. Ficha del ' ~ sitio.nombre ~ '.'))|truncate(180) }}{% endblock %}
 {% block meta_extra %}
-  {% if obra.portada and sitio.url_sitio %}<meta property="og:image" content="{{ obra.portada if obra.portada_externa else sitio.url_sitio ~ '/' ~ obra.portada }}">{% endif %}
+  {% if obra.portada and sitio.url_sitio %}<meta property="og:image" content="{{ sitio.url_sitio ~ '/' ~ obra.portada }}">{% endif %}
   <meta property="og:type" content="book">
 {% endblock %}
 {% block clase_body %}pag-ficha{% endblock %}
