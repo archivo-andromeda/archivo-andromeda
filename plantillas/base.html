@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="{{ recurso('estatico/css/andromeda.css') }}">
 </head>
 <body class="{% block clase_body %}{% endblock %}">
+  <!-- Tinta de las portadas (mapa de degradado): negro #121110 → violeta #a985ff → crema #f2ede3. Cada fila tiene esos 3 colores en R, G y B (valor/255). -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="tinta-portada" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".2126 .7152 .0722 0 0  .2126 .7152 .0722 0 0  .2126 .7152 .0722 0 0  0 0 0 1 0"/><feComponentTransfer><feFuncR type="table" tableValues="0.071 0.663 0.949"/><feFuncG type="table" tableValues="0.067 0.522 0.929"/><feFuncB type="table" tableValues="0.063 1 0.890"/></feComponentTransfer></filter></svg>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
   <header class="cabecera">
