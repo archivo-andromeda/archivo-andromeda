@@ -5,7 +5,9 @@
 
    Cuentos dentro de libros del archivo («ocultas»): no aparecen por defecto.
    Se muestran al filtrar por su formato, al filtrar por su publicación (?pub=)
-   o al buscar su título o autoría. */
+   o al buscar su título o autoría. Al revés, un libro sin disidencias propias
+   cuyos cuentos sí las tienen queda oculto y se muestran sus cuentos («es_libro»);
+   aparece con las mismas reglas. */
 (function () {
   "use strict";
 
@@ -126,17 +128,23 @@
     contador.textContent = n === 1 ? "1 obra" : `${n} obras`;
     vacio.hidden = n > 0;
 
-    // Aviso: cuentos que coinciden pero están dentro de libros del archivo
+    // Aviso: obras que coinciden pero están escondidas (cuentos dentro de libros
+    // del archivo, o libros que se esconden porque se muestran sus cuentos)
     const escondidas = datos.filter((o) => o.oculta && cumpleFiltros(o) && !visible(o));
     avisoOcultas.replaceChildren();
     avisoOcultas.hidden = !escondidas.length;
     if (escondidas.length) {
       const formatos = new Set(escondidas.flatMap((o) => o.formato));
-      avisoOcultas.append(
-        escondidas.length === 1
-          ? "Hay 1 cuento más dentro de un libro del archivo. "
-          : `Hay ${escondidas.length} cuentos más dentro de libros del archivo. `
-      );
+      const libros = escondidas.filter((o) => o.es_libro).length;
+      const cuentos = escondidas.length - libros;
+      const partes = [];
+      if (cuentos) partes.push(cuentos === 1
+        ? "1 cuento más dentro de un libro del archivo"
+        : `${cuentos} cuentos más dentro de libros del archivo`);
+      if (libros) partes.push(libros === 1
+        ? "1 libro más en el archivo"
+        : `${libros} libros más en el archivo`);
+      avisoOcultas.append(`Hay ${partes.join(" y ")}. `);
       const ver = document.createElement("button");
       ver.type = "button";
       ver.className = "boton-texto";
