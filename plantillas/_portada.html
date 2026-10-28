@@ -4,6 +4,7 @@
   <span class="cinta" aria-hidden="true"></span>
   {% if o.portada %}
     <img src="{{ recurso(o.portada) }}" alt="Portada de {{ o.titulo }}" loading="lazy">
+    {% if tam != 'portada-grande' %}<img class="portada-tinta" src="{{ recurso(o.portada) }}" alt="" aria-hidden="true" loading="lazy"><span class="portada-trama" aria-hidden="true"></span>{% endif %}
   {% else %}
     <span class="tela-costura" aria-hidden="true"></span>
     <span class="tela-etiqueta">
