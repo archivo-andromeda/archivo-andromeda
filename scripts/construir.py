@@ -66,6 +66,10 @@ PESOS_RELACION = {"autoria": 5, "disidencias": 3, "subgeneros": 2, "temas": 2, "
 RELACIONADAS_MAX = 3
 RELACIONADAS_MINIMO = 4
 
+# Portadas: la imagen de cada obra es estatico/portadas/<id> con una de estas
+# extensiones (si hay varias, gana la primera de la lista)
+PORTADAS = RAIZ / "estatico" / "portadas"
+PORTADA_EXTENSIONES = (".webp", ".jpg", ".jpeg", ".png")
 # Ancho máximo (en píxeles) de las portadas publicadas
 PORTADA_ANCHO = 600
 
@@ -199,8 +203,29 @@ def personas(valor: str, actual: dict[str, str]) -> list[dict]:
 
 # ── Obras ────────────────────────────────────────────────────
 
+def indexar_portadas() -> dict[str, str]:
+    """Devuelve {id: nombre de archivo} con las imágenes de estatico/portadas/."""
+    encontradas: dict[str, list[str]] = {}
+    if PORTADAS.exists():
+        for ruta in sorted(PORTADAS.iterdir()):
+            if not ruta.is_file() or ruta.name.startswith("."):
+                continue
+            if ruta.suffix.lower() not in PORTADA_EXTENSIONES:
+                avisos.append(f"estatico/portadas/{ruta.name}: no es un formato de portada (usa .webp, .jpg o .png).")
+                continue
+            encontradas.setdefault(ruta.stem.lower(), []).append(ruta.name)
+    portadas = {}
+    for ident, nombres in encontradas.items():
+        nombres.sort(key=lambda n: PORTADA_EXTENSIONES.index(Path(n).suffix.lower()))
+        if len(nombres) > 1:
+            avisos.append(f"Hay {len(nombres)} portadas para «{ident}» ({', '.join(nombres)}); se usa {nombres[0]}.")
+        portadas[ident] = nombres[0]
+    return portadas
+
+
 def cargar_obras(mapas, actual) -> list[dict]:
     obras, vistos = [], set()
+    portadas = indexar_portadas()
     with open(RAIZ / "datos" / "obras.csv", encoding="utf-8-sig", newline="") as f:
         for n, fila in enumerate(csv.DictReader(f), start=2):
             fila = {k.strip(): (v or "").strip() for k, v in fila.items() if k}
@@ -216,11 +241,7 @@ def cargar_obras(mapas, actual) -> list[dict]:
 
             anio = fila.get("anio", "")
             decada = f"{anio[:3]}0s" if re.fullmatch(r"\d{4}", anio) else ""
-            portada = fila.get("portada", "")
-            if portada and not portada.startswith(("http://", "https://")):
-                if not (RAIZ / "estatico" / "portadas" / portada).exists():
-                    avisos.append(f"«{titulo}»: no encontré la imagen estatico/portadas/{portada}.")
-                portada = f"estatico/portadas/{portada}"
+            portada = f"estatico/portadas/{portadas[ident]}" if ident in portadas else ""
 
             autoras = personas(fila.get("autoria", ""), actual)
             editorxs = personas(fila.get("editorx", ""), actual)
@@ -242,7 +263,6 @@ def cargar_obras(mapas, actual) -> list[dict]:
                 "propuesta_por": fila.get("propuesta_por", ""),
                 "revision": fila.get("revision", ""),
                 "portada": portada,
-                "portada_externa": portada.startswith("http"),
                 "portada_heredada": False,
                 "tela": color_tela(ident),
                 "subgeneros": normalizar("subgeneros", separar(fila.get("subgeneros", "")), mapas, titulo),
@@ -258,6 +278,8 @@ def cargar_obras(mapas, actual) -> list[dict]:
                 "pub": "", "pub_nombre": "",
             }
             obras.append(obra)
+    for ident in sorted(set(portadas) - vistos):
+        avisos.append(f"estatico/portadas/{portadas[ident]}: no hay ninguna obra con el id «{ident}» (¿está bien escrito el nombre?).")
     obras.sort(key=lambda o: clave(o["titulo"]))
     return obras
 
@@ -268,6 +290,10 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
     Si «publicado_en» coincide con el id o el título de una ficha del archivo,
     se enlazan en ambos sentidos y el cuento se oculta del catálogo por defecto
     (aparece al filtrar por su formato y en la ficha del libro).
+
+    Excepción: si el libro no tiene disidencias propias y alguno de sus cuentos sí
+    (un libro con un solo cuento LGBTQ+, por ejemplo), se rota: se esconde el libro
+    y se muestran sus cuentos.
     """
     por_id = {o["id"]: o for o in obras}
     por_titulo = {clave(o["titulo"]): o for o in obras}
@@ -285,10 +311,15 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
             o["pub"], o["pub_nombre"] = cont["id"], cont["titulo"]
             cont["contenidos"].append(o)
             if not o["portada"] and cont["portada"]:
-                o.update(portada=cont["portada"], portada_externa=cont["portada_externa"],
-                         portada_heredada=True)
+                o.update(portada=cont["portada"], portada_heredada=True)
         else:
             o["pub"], o["pub_nombre"] = slug(valor), valor
+
+    for o in obras:
+        if o["contenidos"] and not o["disidencias"] and any(c["disidencias"] for c in o["contenidos"]):
+            o["oculta"] = True
+            for c in o["contenidos"]:
+                c["oculta"] = False
 
     for o in obras:
         o["contenidos"].sort(key=lambda c: (c["anio"] or "9999", clave(c["titulo"])))
@@ -447,6 +478,7 @@ def main() -> int:
     datos_js = [
         {k: o[k] for k in ("id", "titulo", "autoria", "anio", "texto", "texto_corto",
                            "oculta", "pub", "pub_nombre", *DIMENSIONES.keys())}
+        | {"es_libro": bool(o["contenidos"])}
         for o in obras
     ]
     a_js = lambda d: json.dumps(d, ensure_ascii=False).replace("</", "<\\/")
@@ -460,7 +492,12 @@ def main() -> int:
 
     visibles = [o for o in obras if not o["oculta"]]
     for o in obras:
-        serie = o["contenedor"]["contenidos"] if o["oculta"] else visibles
+        if not o["oculta"]:
+            serie = visibles
+        elif o["contenedor"]:
+            serie = o["contenedor"]["contenidos"]
+        else:
+            serie = [o]  # libro escondido porque se muestran sus cuentos: sin anterior/siguiente
         i = serie.index(o)
         anterior = serie[i - 1] if i > 0 else None
         siguiente = serie[i + 1] if i < len(serie) - 1 else None
@@ -479,7 +516,7 @@ def main() -> int:
 
     ocultas = sum(o["oculta"] for o in obras)
     print(f"✓ Sitio construido en _site/ con {len(obras)} obras"
-          + (f" ({ocultas} dentro de libros del archivo)." if ocultas else "."))
+          + (f" ({ocultas} {'escondida' if ocultas == 1 else 'escondidas'} por defecto en el catálogo)." if ocultas else "."))
     if Image is None:
         print("  (Pillow no está instalado: las portadas se publicaron sin achicar.)")
     if avisos:

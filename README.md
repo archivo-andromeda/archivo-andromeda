@@ -26,7 +26,7 @@ datos/autores.csv        ← datos de autoras y autores (opcional, se llena a ma
 config.yml               ← nombre del sitio, enlace al formulario, créditos
 paginas/acerca.md        ← texto de la página «Acerca»
 paginas/proponer.md      ← texto de la página «Proponer una obra»
-estatico/portadas/       ← imágenes de portada (opcional)
+estatico/portadas/       ← portadas, nombradas con el id de cada obra (opcional)
 plantillas/, estatico/   ← diseño (HTML, CSS, JS)
 scripts/construir.py     ← genera el sitio a partir del CSV
 scripts/importar_propuestas.py ← trae las propuestas aprobadas del formulario
@@ -194,10 +194,16 @@ Cada ficha muestra hasta 3 obras relacionadas, calculadas solas al publicar. Sum
 
 ### Agregar portadas
 
-- **Desde el formulario:** si la propuesta trae un enlace a la imagen, el importador la descarga, la achica y la guarda sola en `estatico/portadas/<id>.webp`. Si no puede, lo anota en la columna `revision`.
-- **Imagen propia:** súbela a `estatico/portadas/` (**Add file → Upload files**; por ejemplo `las-indignas.jpg`) y escribe ese nombre en la columna `portada`. No importa si es grande: al publicar, el sitio la achica a 600 px de ancho (el archivo original no se toca).
-- **Imagen en internet:** se puede pegar una URL completa en `portada`, pero no es recomendable: si la otra página cambia, la imagen desaparece.
-- **Sin imagen:** deja la columna vacía y el sitio dibuja una portada provisoria. Un cuento sin portada usa la del libro donde se publicó, si está en el archivo.
+La portada de cada obra es la imagen de `estatico/portadas/` que se llama como su `id`: la de `las-indignas` es `estatico/portadas/las-indignas.webp` (también sirven `.jpg`, `.jpeg` y `.png`). **No hay que anotarla en `obras.csv`:** si el archivo existe, aparece en la ficha y en el catálogo al publicar.
+
+- **Prepárala antes de subirla.** Todo lo que se sube queda para siempre en el historial del repositorio, aunque después se borre. Con [Squoosh](https://squoosh.app): arrastra la imagen; si mide más de 600 px de ancho, activa **Resize** y escribe `600` en **Width** (si mide menos, déjala así: agrandarla no agrega detalle); elige **WebP** con **Quality** en 80, descárgala y renómbrala con el `id`.
+- **Desde la web:** entra a `estatico/portadas/`, pulsa **Add file → Upload files**, arrastra las imágenes y pulsa **Commit changes**.
+- **Con GitHub Desktop:** pulsa **Fetch origin** (y **Pull origin**, si aparece). Abre tu copia con **Repository → Show in Finder** (o **Show in Explorer**), copia las imágenes en `estatico/portadas/`, revisa la lista en **Changes**, escribe un resumen en **Summary** y pulsa **Commit to main** y después **Push origin**.
+- **Para cambiarla,** sube otra con el mismo nombre: reemplaza a la anterior. Si cambias el `id` de una obra, cambia también el nombre de su imagen.
+- **Desde el formulario:** si la propuesta trae un enlace a la imagen, el importador la descarga, la achica y la guarda sola como `estatico/portadas/<id>.webp`. Si no puede, anota el enlace en la columna `revision` para que la subas a mano.
+- **Sin imagen,** el sitio dibuja una portada provisoria. Un cuento sin portada usa la del libro donde se publicó, si está en el archivo.
+
+Al publicar, el registro de **Actions → Publicar sitio** avisa si alguna imagen no coincide con ninguna obra (por ejemplo, por un error de tipeo en el nombre). Las imágenes de más de 600 px de ancho se achican en el sitio publicado; el archivo del repositorio no se toca.
 
 ### Cuentos sueltos y «publicado en»
 
@@ -237,7 +243,6 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 | `temas` | Libres, separados por `;` | `religión; cuerpo; memoria` |
 | `editorial` | | `Alfaguara` |
 | `descripcion` | Texto de la ficha | |
-| `portada` | Nombre de archivo en `estatico/portadas/` (o una URL) | `las-indignas.jpg` |
 | `conseguir` | Dónde conseguirla, de preferencia la página de la editorial. Varios, separados por `;` | `https://…` |
 | `leer_en_linea` | Enlace para leerla gratis en internet. Aparece como botón destacado | `https://…` |
 | `referencias` | Fichas en bases de datos de libros, separadas por `;`. Goodreads, Tercera Fundación, ISFDB, StoryGraph y otras aparecen con su nombre | `https://www.goodreads.com/…` |

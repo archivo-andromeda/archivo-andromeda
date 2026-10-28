@@ -8,8 +8,8 @@ datos/obras.csv. Las obras que ya están en el catálogo (mismo título y autor�
 se saltan, así que puedes ejecutarlo varias veces sin duplicar nada.
 
 Si la propuesta trae un enlace a la imagen de portada, la descarga, la achica
-y la guarda en estatico/portadas/<id>.webp. Si no puede, deja un aviso en la
-columna «revision» de la obra.
+y la guarda en estatico/portadas/<id>.webp, donde el sitio la encuentra sola.
+Si no puede, anota el enlace en la columna «revision» de la obra.
 
 Uso:
     python scripts/importar_propuestas.py "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"
@@ -36,7 +36,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 OBRAS = RAIZ / "datos" / "obras.csv"
 PORTADAS = RAIZ / "estatico" / "portadas"
 COLUMNAS = ["id", "titulo", "autoria", "editorx", "anio", "pais", "formato", "medio", "publicado_en",
-            "subgeneros", "disidencias", "afectos", "temas", "editorial", "descripcion", "portada",
+            "subgeneros", "disidencias", "afectos", "temas", "editorial", "descripcion",
             "conseguir", "leer_en_linea", "referencias", "enlace", "propuesta_por", "revision"]
 MULTIPLES = {"pais", "subgeneros", "disidencias", "afectos", "temas", "formato", "medio"}   # separados por ; o ,
 PERSONAS = {"autoria", "editorx"}                                                 # separados por ; o ,
@@ -123,10 +123,10 @@ def url_descargable(url: str) -> str:
     return url
 
 
-def descargar_portada(url: str, ident: str) -> tuple[str, str]:
-    """Descarga y achica una portada. Devuelve (valor para la columna portada, aviso)."""
+def descargar_portada(url: str, ident: str) -> str:
+    """Descarga y achica una portada en estatico/portadas/<id>.webp. Devuelve un aviso si falla."""
     if Image is None:
-        return url, "No se pudo procesar la portada (falta Pillow); quedó el enlace original."
+        return f"No se pudo procesar la portada (falta Pillow); súbela a mano desde {url}"
     try:
         pedido = urllib.request.Request(url_descargable(url), headers={"User-Agent": "Mozilla/5.0 (Archivo Andromeda)"})
         with urllib.request.urlopen(pedido, timeout=30) as r:
@@ -139,11 +139,10 @@ def descargar_portada(url: str, ident: str) -> tuple[str, str]:
                 im = im.resize((PORTADA_ANCHO, round(im.height * PORTADA_ANCHO / im.width)), Image.LANCZOS)
             im = im.convert("RGB")
             PORTADAS.mkdir(parents=True, exist_ok=True)
-            nombre = f"{ident}.webp"
-            im.save(PORTADAS / nombre, "WEBP", quality=82)
-        return nombre, ""
+            im.save(PORTADAS / f"{ident}.webp", "WEBP", quality=82)
+        return ""
     except Exception as e:
-        return url, f"No se pudo descargar la portada ({e}); revisa el enlace."
+        return f"No se pudo descargar la portada ({e}); revisa el enlace: {url}"
 
 
 def main() -> int:
@@ -204,13 +203,17 @@ def main() -> int:
         o["id"] = ident
 
         notas = ["Propuesta comunitaria; etiquetas por revisar."]
-        if o.get("portada", "").startswith(("http://", "https://")):
-            o["portada"], aviso = descargar_portada(o["portada"], ident)
+        portada = ""
+        url_portada = o.pop("portada", "")
+        if url_portada.startswith(("http://", "https://")):
+            aviso = descargar_portada(url_portada, ident)
             if aviso:
                 notas.append(aviso)
+            else:
+                portada = f"{ident}.webp"
         o["revision"] = " ".join(notas)
         nuevas.append({c: o.get(c, "") for c in cabecera})
-        print(f"  + nueva: {o['titulo']} — {o['autoria']}" + (f"  (portada: {o['portada']})" if o.get("portada") else ""))
+        print(f"  + nueva: {o['titulo']} — {o['autoria']}" + (f"  (portada: {portada})" if portada else ""))
 
     if not nuevas:
         print("\nNo hay obras nuevas para agregar.")
