@@ -142,7 +142,7 @@ a.sello:hover { filter: brightness(1.15); color: var(--sello-on); }
 /* Portadas teñidas con trama (tarjetas y obra del día); recuperan su color al pasar el mouse. El filtro está en base.html */
 .portada-tinta, .portada-trama { position: absolute; inset: 0; transition: opacity .35s ease; }
 .portada-tinta { filter: url(#tinta-portada); }
-.portada-trama { pointer-events: none; background-image: radial-gradient(rgba(18, 17, 16, .55) 32%, transparent 34%); background-size: 3px 3px; mix-blend-mode: multiply; }
+.portada-trama { display: none; pointer-events: none; background-image: radial-gradient(rgba(18, 17, 16, .55) 32%, transparent 34%); background-size: 3px 3px; mix-blend-mode: multiply; }
 .tarjeta:hover :is(.portada-tinta, .portada-trama), .tarjeta:focus-visible :is(.portada-tinta, .portada-trama), .obra-dia-enlace:hover :is(.portada-tinta, .portada-trama), .obra-dia-enlace:focus-visible :is(.portada-tinta, .portada-trama) { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .portada-tinta, .portada-trama { transition: none; } }
 .portada-mini { width: 96px; align-self: start; }
