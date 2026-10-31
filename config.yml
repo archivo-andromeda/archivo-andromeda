@@ -19,3 +19,13 @@ contacto: "archivo.andromeda@gmail.com"
 
 # Créditos que aparecen en el pie de página.
 creditos: "Curaduría: Marion Garolera"
+
+# Biblioteca aliada: botón «Pedir copia» en las fichas y filtro en el catálogo.
+# En obras.csv, la columna «biblioteca» lleva el enlace a la ficha de la obra en su sitio,
+# o «sí» si la tienen pero aún no hay ficha (entonces se usa el enlace general «url»).
+biblioteca:
+  nombre: "Centro RARA"
+  filtro: "Biblioteca RARA"
+  boton: "Pedir copia en Centro RARA"
+  lugar: "Préstamo en Santiago de Chile"
+  url: "https://centrorara.cl/"

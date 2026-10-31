@@ -22,11 +22,12 @@ Todo el catálogo vive en un solo archivo, **`datos/obras.csv`**. Cada vez que l
 ```
 datos/obras.csv          ← EL CATÁLOGO: una fila por obra
 datos/vocabulario.yml    ← etiquetas permitidas, sus descripciones y sinónimos
-datos/autores.csv        ← datos de autoras y autores (opcional, se llena a mano)
-config.yml               ← nombre del sitio, enlace al formulario, créditos
+datos/autores.csv        ← bio, país, enlaces y variantes de nombre de cada persona (opcional, se llena a mano)
+config.yml               ← nombre del sitio, enlace al formulario, créditos, biblioteca aliada
 paginas/acerca.md        ← texto de la página «Acerca»
 paginas/proponer.md      ← texto de la página «Proponer una obra»
 estatico/portadas/       ← portadas, nombradas con el id de cada obra (opcional)
+estatico/autores/        ← fotos de autores, nombradas con el id de cada persona (opcional)
 plantillas/, estatico/   ← diseño (HTML, CSS, JS)
 scripts/construir.py     ← genera el sitio a partir del CSV
 scripts/importar_propuestas.py ← trae las propuestas aprobadas del formulario
@@ -101,7 +102,7 @@ La primera sección reúne lo que más sirve que complete quien leyó la obra: e
 | 3 | Formato | Opción múltiple | | Novela · Novela corta · Libro de cuentos · Antología · Cuento · Microficción · Poemario narrativo · *Otro* |
 | 4 | Subgénero especulativo | Casillas | | Ciencia ficción · Weird · Distopía · Utopía · Gótico · Ucronía · Fantasía · Horror · Ficción climática · Postapocalíptico · Poesía especulativa · *Otro* |
 | 5 | Disidencias sexogenéricas representadas | Casillas | | Lésbica · Gay · Marica · Bisexual · Trans · Travesti · No binarie · Género fluido · Intersex · Asexual · Poliamor · Cuir · *Otro* |
-| 6 | Afectos: ¿Qué te hizo sentir esta obra? | Casillas | | Esperanza · Agobio · Calentura · Congoja · Ternura · Mariposas · Rabia · Asco · Extrañeza · Curiosidad · *Otro* |
+| 6 | Afectos: ¿Qué te hizo sentir esta obra? | Casillas | | Esperanza · Agobio · Calentura · Congoja · Ternura · Mariposas · Rabia · Asco · Extrañeza · Curiosidad · Risa · *Otro* |
 | 7 | Temas | Respuesta corta | | *Ayuda: «Algunas palabras clave, separadas por comas»* |
 | 8 | Descripción breve | Párrafo | | |
 
@@ -216,7 +217,19 @@ Un cuento o una microficción se cataloga como cualquier obra, con formato `cuen
 
 - Varias personas en `autoria` o `editorx` se separan con `;`.
 - Usa siempre el **nombre actual** de cada persona. Si una obra se publicó con otro nombre, o una persona aparece escrita de formas distintas, agrégala a `datos/autores.csv` con sus `variantes` (separadas por `;`): el sitio agrupa todo bajo el nombre actual y **nunca muestra las variantes** ni las usa en el buscador.
-- `autores.csv` es opcional. Columnas: `id`, `nombre`, `variantes`, `pais`, `bio`, `enlaces`. Las fichas de autores usarán estos datos más adelante.
+- Cada persona que aparece en `autoria` o `editorx` tiene su página en `autores/<id>/`, con sus obras (los cuentos de un libro suyo van dentro del bloque del libro), lo que hizo como editorx y las disidencias, subgéneros y afectos que recorren su obra. Su nombre en la ficha de una obra enlaza a esa página.
+- `autores.csv` es opcional: sirve para completar esas páginas. Columnas: `id`, `nombre`, `variantes`, `pais`, `bio`, `enlaces`, `foto_credito`.
+  - `id`: déjalo vacío para que se cree a partir del nombre (`Andrea Chapela` → `andrea-chapela`).
+  - `pais`: el de la persona (no se toma de sus obras). Si está vacío, no se muestra.
+  - `bio`: cada salto de línea dentro de la celda es un párrafo nuevo. Se puede usar `*cursiva*` para los títulos. Si está vacía, la página dice «Bio por completar».
+  - `enlaces`: web, redes, entrevistas, separados por `;`.
+- **Fotos:** la foto de cada persona es la imagen de `estatico/autores/` que se llama como su `id` (`estatico/autores/andrea-chapela.webp`), igual que las portadas, y se prepara de la misma forma con Squoosh. Pídela a la persona o a su editorial, y anota quién la tomó en `foto_credito` (se muestra como «Foto: …»). Sin foto, la página muestra sus iniciales.
+
+### Biblioteca aliada (Centro RARA)
+
+- En `obras.csv`, la columna `biblioteca` marca las obras que tiene la biblioteca. Lleva el **enlace a la ficha de la obra** en el sitio de la biblioteca o, si todavía no tiene ficha, **`sí`** (entonces el botón usa el enlace general de `config.yml`). Vacía = no la tiene.
+- Las obras marcadas muestran el botón **«Pedir copia en Centro RARA»** junto al título, y el catálogo suma el filtro **Biblioteca RARA** (disponible / no disponible). El filtro aparece solo cuando hay al menos una obra marcada.
+- El nombre, el texto del botón, la nota bajo el botón y el enlace general están en la sección `biblioteca` de `config.yml`. Si se borra esa sección, el botón y el filtro desaparecen.
 
 ### Agregar o cambiar etiquetas del vocabulario
 
@@ -242,12 +255,14 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 | `afectos` | Del vocabulario: lo que la obra le hizo sentir a quien la leyó. Varios, separados por `;` | `ternura; rabia` |
 | `temas` | Libres, separados por `;` | `religión; cuerpo; memoria` |
 | `editorial` | | `Alfaguara` |
-| `descripcion` | Texto de la ficha | |
+| `descripcion` | Texto propio del archivo sobre la obra. Cada salto de línea es un párrafo | |
+| `sinopsis` | La sinopsis de la contraportada, copiada tal cual. Aparece bajo la descripción, con el nombre de la editorial como fuente | |
 | `conseguir` | Dónde conseguirla, de preferencia la página de la editorial. Varios, separados por `;` | `https://…` |
 | `leer_en_linea` | Enlace para leerla gratis en internet. Aparece como botón destacado | `https://…` |
+| `biblioteca` | Si la tiene la biblioteca aliada: el enlace a su ficha allá, o `sí` (ver «Biblioteca aliada») | `sí` |
 | `referencias` | Fichas en bases de datos de libros, separadas por `;`. Goodreads, Tercera Fundación, ISFDB, StoryGraph y otras aparecen con su nombre | `https://www.goodreads.com/…` |
 | `enlace` | Más información: reseñas, entrevistas. Varios, separados por `;` | `https://…` |
-| `propuesta_por` | Quién la propuso (opcional) | |
+| `propuesta_por` | Quién la propuso (opcional). Aparece al final de la ficha: «Obra propuesta por…» | |
 | `revision` | Si tiene texto, la ficha muestra el sello «en revisión» y ese texto aparece al pasar el cursor. | |
 
 ---

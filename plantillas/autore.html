@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "_tarjeta.html" import tarjeta %}
+{% block titulo %}{{ autore.nombre }} — {{ sitio.nombre }}{% endblock %}
+{% block descripcion %}{{ (autore.bio_html|striptags if autore.bio else (autore.nombre ~ ' en el ' ~ sitio.nombre ~ ': obras de literatura especulativa LGBTQ+ latinoamericana.'))|truncate(180) }}{% endblock %}
+{% block meta_extra %}
+  {% if autore.foto and sitio.url_sitio %}<meta property="og:image" content="{{ sitio.url_sitio ~ '/' ~ autore.foto }}">{% endif %}
+  <meta property="og:type" content="profile">
+{% endblock %}
+{% block clase_body %}pag-ficha pag-autore{% endblock %}
+
+{% macro sellos(dim, param, valores) %}
+  {% for v, n in valores %}<a class="sello sello-{{ dim }}{% if dim == 'disidencias' %} sello-dis{% endif %}" href="{{ enlace('?' ~ param ~ '=' ~ v|urlencode) }}">{{ v }} <span class="sello-n">{{ n }}</span></a>{% endfor %}
+{% endmacro %}
+
+{% block contenido %}
+<nav class="migas" aria-label="Ruta">
+  <a href="{{ enlace('') }}">Catálogo</a> <span aria-hidden="true">/</span>
+  <span aria-current="page">{{ autore.nombre }}</span>
+</nav>
+
+<article class="ficha autore">
+  <div class="ficha-portada">
+    {% if autore.foto %}
+    <figure class="autore-foto">
+      <img src="{{ recurso(autore.foto) }}" alt="Foto de {{ autore.nombre }}">
+      {% if autore.foto_credito %}<figcaption class="portada-nota">Foto: {{ autore.foto_credito }}</figcaption>{% endif %}
+    </figure>
+    {% else %}
+    <div class="autore-foto autore-sin-foto" aria-hidden="true">
+      <span class="autore-iniciales">{{ autore.iniciales }}</span>
+      <span class="tela-adorno">✦</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="ficha-cuerpo">
+    <header class="ficha-cabecera">
+      <p class="ficha-sig">Autore{% if autore.pais %} · {{ autore.pais|join(', ') }}{% endif %}</p>
+      <h1>{{ autore.nombre }}</h1>
+      <p class="ficha-autoria">
+        {%- set n = autore.obras|length -%}
+        {%- if n %}{{ n }} {{ 'obra' if n == 1 else 'obras' }} en el archivo{% endif -%}
+        {%- if autore.editadas %}{% if n %} · {% endif %}{{ autore.editadas|length }} como editorx{% endif -%}
+        {%- if autore.anios %} · {{ autore.anios }}{% endif -%}
+      </p>
+    </header>
+
+    <section class="autore-bio">
+      <h2 class="sr">Bio</h2>
+      {% if autore.bio_html %}{{ autore.bio_html|safe }}
+      {% else %}<p class="pendiente-bloque">Bio por completar.</p>{% endif %}
+    </section>
+
+    {% if autore.enlaces %}
+    <p class="autore-enlaces">{% for e in autore.enlaces %}<a class="enlace-externo" href="{{ e.url }}" rel="noopener" target="_blank">{{ e.etiqueta }} ↗</a>{% endfor %}</p>
+    {% endif %}
+
+    {% if autore.etiquetas.disidencias or autore.etiquetas.subgeneros or autore.etiquetas.afectos %}
+    <section class="autore-etiquetas">
+      <h2 class="sinopsis-rotulo">Etiquetas que recorren su obra</h2>
+      <p class="autore-sellos">{{ sellos('disidencias', dims.disidencias[2], autore.etiquetas.disidencias) }}{{ sellos('subgeneros', dims.subgeneros[2], autore.etiquetas.subgeneros) }}{{ sellos('afectos', dims.afectos[2], autore.etiquetas.afectos) }}</p>
+    </section>
+    {% endif %}
+  </div>
+</article>
+
+{% if autore.obras %}
+<section class="contenidos" aria-labelledby="obras-titulo">
+  <h2 id="obras-titulo">Obras en el archivo <span class="contenidos-n">{{ autore.obras|length }}</span></h2>
+  <ol class="fichero fichero-contenidos">
+    {% for b in autore.bloques %}
+    <li class="ficha-tarjeta{% if b.dentro %} con-dentro{% endif %}">
+      {{ tarjeta(b.obra, enlace, recurso) }}
+      {% if b.dentro %}
+      <ul class="autore-dentro">
+        {% for c in b.dentro %}<li><span aria-hidden="true">↳</span> <a href="{{ enlace('obras/' ~ c.id ~ '/') }}">{{ c.titulo }}</a> <span class="autore-dentro-sig">{{ c.formato|join(', ') }}{% if c.anio %} · {{ c.anio }}{% endif %}</span></li>{% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+{% if autore.editadas %}
+<section class="contenidos" aria-labelledby="editadas-titulo">
+  <h2 id="editadas-titulo">Como editorx <span class="contenidos-n">{{ autore.editadas|length }}</span></h2>
+  <ol class="fichero fichero-contenidos">
+    {% for o in autore.editadas %}<li class="ficha-tarjeta">{{ tarjeta(o, enlace, recurso) }}</li>{% endfor %}
+  </ol>
+</section>
+{% endif %}
+{% endblock %}

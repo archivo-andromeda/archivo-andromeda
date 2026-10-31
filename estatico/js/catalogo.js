@@ -159,7 +159,7 @@
       const nombre = nombrePub.get(p) || p;
       chip(`en: ${nombre}`, nombre, () => pubs.delete(p));
     });
-    DIMS.forEach((d) => sel[d].forEach((v) => chip(v, v, () => sel[d].delete(v))));
+    DIMS.forEach((d) => sel[d].forEach((v) => chip(d === "biblioteca" && CONFIG.bib ? `${CONFIG.bib}: ${v}` : v, v, () => sel[d].delete(v))));
     if (DIMS.some((d) => sel[d].size) || pubs.size || q.value) {
       const l = document.createElement("button");
       l.type = "button";

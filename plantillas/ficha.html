@@ -2,7 +2,7 @@
 {% from "_portada.html" import portada %}
 {% from "_tarjeta.html" import tarjeta %}
 {% block titulo %}{{ obra.titulo }} · {{ obra.autoria }} — {{ sitio.nombre }}{% endblock %}
-{% block descripcion %}{{ (obra.descripcion or (obra.titulo ~ ', de ' ~ obra.autoria ~ (' (' ~ obra.pais|join(', ') ~ ', ' ~ obra.anio ~ ')' if obra.anio else '') ~ '. Ficha del ' ~ sitio.nombre ~ '.'))|truncate(180) }}{% endblock %}
+{% block descripcion %}{{ (obra.descripcion or obra.sinopsis or (obra.titulo ~ ', de ' ~ obra.autoria ~ (' (' ~ obra.pais|join(', ') ~ ', ' ~ obra.anio ~ ')' if obra.anio else '') ~ '. Ficha del ' ~ sitio.nombre ~ '.'))|truncate(180) }}{% endblock %}
 {% block meta_extra %}
   {% if obra.portada and sitio.url_sitio %}<meta property="og:image" content="{{ sitio.url_sitio ~ '/' ~ obra.portada }}">{% endif %}
   <meta property="og:type" content="book">
@@ -16,6 +16,8 @@
 {% macro lista_enlaces(lista) %}
   {% for e in lista %}<a class="enlace-externo" href="{{ e.url }}" rel="noopener" target="_blank">{{ e.etiqueta }} ↗</a>{% endfor %}
 {% endmacro %}
+
+{% macro gente(lista) %}{% for p in lista %}{% if not loop.first %}{{ ' y ' if loop.last else ', ' }}{% endif %}<a href="{{ enlace('autores/' ~ p.id ~ '/') }}">{{ p.nombre }}</a>{% endfor %}{% endmacro %}
 
 {% macro publicacion(o) %}
   {% if o.contenedor %}<a href="{{ enlace('obras/' ~ o.contenedor.id ~ '/') }}"><em>{{ o.contenedor.titulo }}</em></a>
@@ -36,23 +38,27 @@
   </div>
 
   <div class="ficha-cuerpo">
-    <header class="ficha-cabecera">
+    <header class="ficha-cabecera{% if obra.biblioteca_url %} con-biblioteca{% endif %}">
+      <div class="ficha-cabecera-texto">
       <p class="ficha-sig">{{ obra.formato|join(', ') }}{% if obra.anio %} · {{ obra.anio }}{% endif %}</p>
       <h1>{{ obra.titulo }}</h1>
-      <p class="ficha-autoria">{{ obra.autoria }}</p>
+      <p class="ficha-autoria">{{ gente(obra.autoras) }}</p>
       {% if obra.pub_nombre %}<p class="ficha-publicado">Publicado en {{ publicacion(obra) }}</p>{% endif %}
       {% if obra.leer_en_linea %}
       <p class="ficha-acciones">
         {% for e in obra.leer_en_linea %}<a class="boton-sello boton-leer" href="{{ e.url }}" rel="noopener" target="_blank">Leer en línea{% if obra.leer_en_linea|length > 1 %} · {{ e.etiqueta }}{% endif %} ↗</a>{% endfor %}
       </p>
       {% endif %}
+      </div>
+      {% if obra.biblioteca_url %}
+      <p class="accion-biblioteca"><a class="boton-sello boton-biblioteca" href="{{ obra.biblioteca_url }}" rel="noopener" target="_blank">{{ sitio.biblioteca.boton or ('Pedir copia en ' ~ sitio.biblioteca.nombre) }} ↗</a>{% if sitio.biblioteca.lugar %}<span class="accion-nota">{{ sitio.biblioteca.lugar }}</span>{% endif %}</p>
+      {% endif %}
     </header>
 
     <div class="tarjeta-catalogo">
       {% if obra.revision %}<span class="sello-revision" title="{{ obra.revision }}">Ficha en revisión</span>{% endif %}
       <dl class="tabla">
-        <div><dt>{% if obra.autoras|length > 1 %}Autores{% else %}Autore{% endif %}</dt><dd>{{ obra.autoria }}</dd></div>
-        {% if obra.editorx %}<div><dt>Editorx</dt><dd>{{ obra.editorx }}</dd></div>{% endif %}
+        {% if obra.editorx %}<div><dt>Editorx</dt><dd>{{ gente(obra.editorxs) }}</dd></div>{% endif %}
         <div><dt>Año</dt><dd>{{ obra.anio or '—' }}</dd></div>
         <div><dt>País</dt><dd>{% if obra.pais %}{{ sellos('pais', obra.pais) }}{% else %}—{% endif %}</dd></div>
         <div><dt>Formato</dt><dd>{% if obra.formato %}{{ sellos('formato', obra.formato) }}{% else %}—{% endif %}</dd></div>
@@ -66,7 +72,6 @@
         {% if obra.conseguir %}<div><dt>Dónde conseguirla</dt><dd>{{ lista_enlaces(obra.conseguir) }}</dd></div>{% endif %}
         {% if obra.referencias %}<div><dt>Referencias</dt><dd>{{ lista_enlaces(obra.referencias) }}</dd></div>{% endif %}
         {% if obra.enlace %}<div><dt>Más información</dt><dd>{{ lista_enlaces(obra.enlace) }}</dd></div>{% endif %}
-        {% if obra.propuesta_por %}<div><dt>Propuesta por</dt><dd>{{ obra.propuesta_por }}</dd></div>{% endif %}
       </dl>
     </div>
 
@@ -74,11 +79,20 @@
       <h2 class="sr">Descripción</h2>
       {% if obra.descripcion %}
         {% for p in obra.descripcion.split('\n') if p.strip() %}<p>{{ p }}</p>{% endfor %}
-      {% else %}
+      {% endif %}
+      {% if obra.sinopsis %}
+      <figure class="sinopsis">
+        <figcaption class="sinopsis-rotulo">Sinopsis de la contraportada</figcaption>
+        <blockquote>{% for p in obra.sinopsis.split('\n') if p.strip() %}<p>{{ p }}</p>{% endfor %}</blockquote>
+        {% if obra.editorial %}<p class="sinopsis-fuente">— {{ obra.editorial }}</p>{% endif %}
+      </figure>
+      {% endif %}
+      {% if not obra.descripcion and not obra.sinopsis %}
         <p class="pendiente-bloque">Descripción por completar. Si conoces esta obra, puedes <a href="{{ enlace('proponer/') }}">enviarnos una reseña breve</a>.</p>
       {% endif %}
     </section>
 
+    {% if obra.propuesta_por %}<p class="ficha-propuesta">Obra propuesta por {{ obra.propuesta_por }}.</p>{% endif %}
     <p class="ficha-correccion">¿Ves un error o falta algo? <a href="{{ enlace('proponer/') }}">Propón una corrección</a>.</p>
   </div>
 </article>

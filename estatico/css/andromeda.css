@@ -141,7 +141,7 @@ a.sello:hover { filter: brightness(1.15); color: var(--sello-on); }
 .portada img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* Portadas teñidas con trama (tarjetas y obra del día); recuperan su color al pasar el mouse. El filtro está en base.html */
 .portada-tinta, .portada-trama { position: absolute; inset: 0; transition: opacity .35s ease; }
-.portada-tinta { filter: url(#tinta-portada); }
+.portada-tinta { filter: url(#tinta-portada); opacity: .65; }
 .portada-trama { display: none; pointer-events: none; background-image: radial-gradient(rgba(18, 17, 16, .55) 32%, transparent 34%); background-size: 3px 3px; mix-blend-mode: multiply; }
 .tarjeta:hover :is(.portada-tinta, .portada-trama), .tarjeta:focus-visible :is(.portada-tinta, .portada-trama), .obra-dia-enlace:hover :is(.portada-tinta, .portada-trama), .obra-dia-enlace:focus-visible :is(.portada-tinta, .portada-trama) { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .portada-tinta, .portada-trama { transition: none; } }
@@ -376,4 +376,48 @@ body {
 @media (max-width: 560px) {
   .marca-nombre { font-size: 1.9rem; }
   .constelacion { width: 40px; height: 40px; }
+}
+
+/* Ficha: botón de la biblioteca aliada, sinopsis y «propuesta por» */
+.con-biblioteca { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem 2rem; }
+.ficha-cabecera-texto { flex: 1; min-width: 0; }
+.accion-biblioteca { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: .45rem; margin: .2rem 0 0; }
+.boton-biblioteca { --acento: var(--fucsia); padding: .75rem 1.2rem; font-size: .88rem; }
+.accion-nota { font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--texto-3); }
+.sello-boton[data-dim="biblioteca"], .sello-biblioteca { --c: var(--c-geo); }
+.ficha-autoria a { color: inherit; text-decoration-color: var(--acento); text-underline-offset: .2em; }
+.ficha-autoria a:hover { color: var(--acento); }
+.sinopsis { margin: 0; padding-left: 1.2rem; border-left: 3px solid var(--violeta); }
+.ficha-descripcion > p + .sinopsis { margin-top: 2rem; }
+.sinopsis-rotulo { font-family: var(--mono); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; color: var(--acento); margin: 0 0 .7rem; }
+.sinopsis blockquote { margin: 0; color: var(--texto-2); font-size: 1.02rem; }
+.sinopsis blockquote p { margin: 0 0 .8rem; }
+.sinopsis-fuente { font-family: var(--mono); font-size: .76rem; color: var(--texto-3); margin: 0; }
+.ficha-propuesta { margin-top: 2.4rem; font-family: var(--mono); font-size: .8rem; letter-spacing: .04em; color: var(--texto-2); }
+.ficha-propuesta + .ficha-correccion { margin-top: .6rem; }
+
+/* Páginas de autores */
+.pag-autore .ficha-portada { max-width: 280px; }
+.autore-foto { margin: 0; }
+.autore-foto img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radio); }
+.autore-sin-foto { aspect-ratio: 4 / 5; border-radius: var(--radio); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem;
+  background: radial-gradient(circle, rgba(169, 133, 255, .35) 1px, transparent 1.4px) 0 0 / 7px 7px, #2d2350; color: var(--violeta); }
+.autore-iniciales { font-family: var(--display); font-weight: var(--display-peso); font-stretch: var(--display-ancho); font-size: 5.5rem; line-height: 1; letter-spacing: .02em; color: var(--texto); text-shadow: 3px 3px 0 var(--fucsia); }
+.autore-bio { max-width: 40rem; font-size: 1.12rem; }
+.autore-bio p { margin: 0 0 1rem; }
+.autore-enlaces { margin: 1rem 0 0; }
+.autore-etiquetas { margin-top: 2.2rem; }
+.autore-sellos { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; }
+.con-dentro { display: flex; flex-direction: column; }
+.con-dentro .tarjeta { height: auto; flex: 1; }
+.autore-dentro { list-style: none; margin: .5rem 0 0 1rem; padding: 0; font-size: .95rem; }
+.autore-dentro li { margin: .3rem 0; }
+.autore-dentro a { color: var(--texto); }
+.autore-dentro-sig { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--texto-3); margin-left: .4rem; }
+
+@media (max-width: 900px) {
+  .con-biblioteca { flex-direction: column; }
+  .con-biblioteca .accion-biblioteca { align-items: flex-start; margin: -1rem 0 2rem; }
+  .pag-autore .ficha-portada { max-width: 170px; }
+  .autore-iniciales { font-size: 4rem; }
 }

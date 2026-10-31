@@ -35,6 +35,7 @@ LIMPIAS = "--limpias" in sys.argv
 
 # Dimensiones de etiquetas: clave interna → (columna del CSV, nombre visible, parámetro de URL)
 DIMENSIONES = {
+    "biblioteca": (None, "Biblioteca", "bib"),  # «disponible» / «no disponible»: columna «biblioteca» + config.yml
     "subgeneros": ("subgeneros", "Subgénero", "sub"),
     "disidencias": ("disidencias", "Disidencia", "dis"),
     "afectos": ("afectos", "Afecto", "afe"),
@@ -72,6 +73,9 @@ PORTADAS = RAIZ / "estatico" / "portadas"
 PORTADA_EXTENSIONES = (".webp", ".jpg", ".jpeg", ".png")
 # Ancho máximo (en píxeles) de las portadas publicadas
 PORTADA_ANCHO = 600
+
+# Fotos de autores: estatico/autores/<id de la persona> con las mismas extensiones
+FOTOS_AUTORES = RAIZ / "estatico" / "autores"
 
 # Colores de tela para las portadas provisorias
 TELAS = ["#3a1f4d", "#1f2a4f", "#4a1d3f", "#22344a", "#2d2350", "#173b45", "#3d2140", "#26264a"]
@@ -188,6 +192,7 @@ def cargar_autores() -> tuple[dict[str, str], dict[str, dict]]:
                 "pais": separar(fila.get("pais", "")),
                 "bio": fila.get("bio", ""),
                 "enlaces": enlaces(fila.get("enlaces", ""), nombre, "enlaces"),
+                "foto_credito": fila.get("foto_credito", ""),
             }
     return actual, fichas
 
@@ -203,27 +208,47 @@ def personas(valor: str, actual: dict[str, str]) -> list[dict]:
 
 # ── Obras ────────────────────────────────────────────────────
 
-def indexar_portadas() -> dict[str, str]:
-    """Devuelve {id: nombre de archivo} con las imágenes de estatico/portadas/."""
+def indexar_portadas(carpeta: Path = PORTADAS) -> dict[str, str]:
+    """Devuelve {id: nombre de archivo} con las imágenes de estatico/portadas/ (o de otra carpeta)."""
     encontradas: dict[str, list[str]] = {}
-    if PORTADAS.exists():
-        for ruta in sorted(PORTADAS.iterdir()):
+    lugar = carpeta.relative_to(RAIZ).as_posix()
+    if carpeta.exists():
+        for ruta in sorted(carpeta.iterdir()):
             if not ruta.is_file() or ruta.name.startswith("."):
                 continue
             if ruta.suffix.lower() not in PORTADA_EXTENSIONES:
-                avisos.append(f"estatico/portadas/{ruta.name}: no es un formato de portada (usa .webp, .jpg o .png).")
+                avisos.append(f"{lugar}/{ruta.name}: no es un formato de imagen admitido (usa .webp, .jpg o .png).")
                 continue
             encontradas.setdefault(ruta.stem.lower(), []).append(ruta.name)
     portadas = {}
     for ident, nombres in encontradas.items():
         nombres.sort(key=lambda n: PORTADA_EXTENSIONES.index(Path(n).suffix.lower()))
         if len(nombres) > 1:
-            avisos.append(f"Hay {len(nombres)} portadas para «{ident}» ({', '.join(nombres)}); se usa {nombres[0]}.")
+            avisos.append(f"{lugar}: hay {len(nombres)} imágenes para «{ident}» ({', '.join(nombres)}); se usa {nombres[0]}.")
         portadas[ident] = nombres[0]
     return portadas
 
 
-def cargar_obras(mapas, actual) -> list[dict]:
+def biblioteca(valor: str, config_bib: dict, titulo: str) -> tuple[list[str], str]:
+    """Columna «biblioteca»: el enlace a la ficha de la obra en la biblioteca aliada,
+    o «sí» si la tiene pero aún no hay ficha (se usa el enlace general de config.yml).
+
+    Devuelve (["disponible"] o ["no disponible"], enlace del botón)."""
+    if not (config_bib or {}).get("nombre"):
+        if valor:
+            avisos.append(f"«{titulo}»: tiene «biblioteca», pero falta la sección «biblioteca» en config.yml.")
+        return [], ""
+    if not valor:
+        return ["no disponible"], ""
+    if valor.startswith(("http://", "https://")):
+        return ["disponible"], valor
+    url = config_bib.get("url", "")
+    if not url:
+        avisos.append(f"«{titulo}»: «biblioteca» no tiene enlace y config.yml no tiene el enlace general; no se muestra el botón.")
+    return ["disponible"], url
+
+
+def cargar_obras(mapas, actual, config_bib=None) -> list[dict]:
     obras, vistos = [], set()
     portadas = indexar_portadas()
     with open(RAIZ / "datos" / "obras.csv", encoding="utf-8-sig", newline="") as f:
@@ -243,6 +268,7 @@ def cargar_obras(mapas, actual) -> list[dict]:
             decada = f"{anio[:3]}0s" if re.fullmatch(r"\d{4}", anio) else ""
             portada = f"estatico/portadas/{portadas[ident]}" if ident in portadas else ""
 
+            bib, bib_url = biblioteca(fila.get("biblioteca", ""), config_bib, titulo)
             autoras = personas(fila.get("autoria", ""), actual)
             editorxs = personas(fila.get("editorx", ""), actual)
             obra = {
@@ -255,6 +281,7 @@ def cargar_obras(mapas, actual) -> list[dict]:
                 "anio": anio,
                 "editorial": fila.get("editorial", ""),
                 "descripcion": fila.get("descripcion", ""),
+                "sinopsis": fila.get("sinopsis", ""),
                 "publicado_en": fila.get("publicado_en", ""),
                 "conseguir": enlaces(fila.get("conseguir", ""), titulo, "conseguir"),
                 "leer_en_linea": enlaces(fila.get("leer_en_linea", ""), titulo, "leer_en_linea"),
@@ -273,6 +300,8 @@ def cargar_obras(mapas, actual) -> list[dict]:
                 "temas": normalizar("temas", separar(fila.get("temas", "")), mapas, titulo),
                 "pais": normalizar("pais", separar(fila.get("pais", "")), mapas, titulo),
                 "decada": [decada] if decada else [],
+                "biblioteca": bib,
+                "biblioteca_url": bib_url,
                 # Se completan en enlazar_publicaciones()
                 "contenedor": None, "contenidos": [], "oculta": False,
                 "pub": "", "pub_nombre": "",
@@ -331,7 +360,7 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
             for d in ("disidencias", "subgeneros")
         }
         o["texto"] = clave(" ".join([
-            o["titulo"], o["autoria"], o["editorx"], o["editorial"], o["descripcion"], o["anio"],
+            o["titulo"], o["autoria"], o["editorx"], o["editorial"], o["descripcion"], o["sinopsis"], o["anio"],
             o["pub_nombre"], *o["pais"], *o["temas"], *o["subgeneros"], *o["disidencias"], *o["afectos"],
             *o["formato"], *o["medio"],
         ]))
@@ -376,11 +405,65 @@ def relacionar(obras: list[dict]) -> None:
                              for *_, c, comparte in candidatas[:RELACIONADAS_MAX]]
 
 
-def facetas(obras) -> list[dict]:
+def armar_autores(obras: list[dict], fichas: dict[str, dict]) -> list[dict]:
+    """Una página por cada persona que aparece como autore o editorx.
+
+    Toma sus obras del catálogo y, si está en datos/autores.csv, su país, bio, enlaces
+    y crédito de la foto. La foto es la imagen de estatico/autores/ que se llama como su id.
+    """
+    fotos = indexar_portadas(FOTOS_AUTORES)
+    autores: dict[str, dict] = {}
+
+    def persona(p: dict) -> dict:
+        f = fichas.get(p["nombre"], {})
+        p["id"] = f.get("id") or p["id"]
+        if p["id"] not in autores:
+            autores[p["id"]] = {
+                "id": p["id"], "nombre": p["nombre"], "pais": f.get("pais", []),
+                "bio": f.get("bio", ""), "enlaces": f.get("enlaces", []),
+                "foto": f"estatico/autores/{fotos[p['id']]}" if p["id"] in fotos else "",
+                "foto_credito": f.get("foto_credito", ""), "obras": [], "editadas": [],
+            }
+        return autores[p["id"]]
+
+    for o in obras:
+        for p in o["autoras"]:
+            persona(p)["obras"].append(o)
+        for p in o["editorxs"]:
+            persona(p)["editadas"].append(o)
+    for ident in sorted(set(fotos) - set(autores)):
+        avisos.append(f"estatico/autores/{fotos[ident]}: no hay ninguna persona con el id «{ident}» (¿está bien escrito el nombre?).")
+
+    orden = lambda o: (o["anio"] or "9999", clave(o["titulo"]))
+    for a in autores.values():
+        a["obras"].sort(key=orden)
+        a["editadas"].sort(key=orden)
+        propias = {o["id"] for o in a["obras"]}
+        # Un cuento cuyo libro también es suyo y está en el archivo va dentro del bloque del libro
+        a["bloques"] = [{"obra": o, "dentro": [c for c in o["contenidos"] if c["id"] in propias]}
+                        for o in a["obras"] if not (o["contenedor"] and o["contenedor"]["id"] in propias)]
+        todas = a["obras"] + [o for o in a["editadas"] if o["id"] not in propias]
+        anios = sorted(o["anio"] for o in todas if re.fullmatch(r"\d{4}", o["anio"]))
+        a["anios"] = (anios[0] if anios[0] == anios[-1] else f"{anios[0]}–{anios[-1]}") if anios else ""
+        a["etiquetas"] = {d: sorted(Counter(v for o in todas for v in o[d]).items(), key=lambda kv: (-kv[1], clave(kv[0])))
+                          for d in ("disidencias", "subgeneros", "afectos")}
+        # Cada línea de la celda «bio» es un párrafo; se admite Markdown (*cursiva*, enlaces)
+        parrafos = "\n\n".join(l.strip() for l in a["bio"].splitlines() if l.strip())
+        a["bio_html"] = markdown.markdown(parrafos, extensions=["smarty"]) if parrafos else ""
+        palabras = a["nombre"].split()
+        a["iniciales"] = (palabras[0][0] + (palabras[-1][0] if len(palabras) > 1 else "")).upper()
+    return sorted(autores.values(), key=lambda a: clave(a["nombre"]))
+
+
+def facetas(obras, config_bib=None) -> list[dict]:
     salida = []
     for dim, (_, nombre, param) in DIMENSIONES.items():
         c = Counter(v for o in obras if not o["oculta"] or dim == "formato" for v in o[dim])
-        if dim == "decada":
+        if dim == "biblioteca":
+            # Solo aparece si alguna obra está disponible; «disponible» va primero
+            nombre = (config_bib or {}).get("filtro") or nombre
+            valores = sorted(c.items(), key=lambda kv: kv[0] != "disponible") if c.get("disponible") else []
+        elif dim == "decada":
             valores = sorted(c.items(), reverse=True)
         else:
             valores = sorted(c.items(), key=lambda kv: (-kv[1], clave(kv[0])))
@@ -425,17 +508,19 @@ def main() -> int:
     config = cargar_yaml(RAIZ / "config.yml")
     vocab = cargar_yaml(RAIZ / "datos" / "vocabulario.yml")
     mapas = mapa_alias(vocab)
-    actual, _fichas_autores = cargar_autores()  # las fichas de autores vendrán después
-    obras = cargar_obras(mapas, actual)
+    actual, fichas_autores = cargar_autores()
+    obras = cargar_obras(mapas, actual, config.get("biblioteca"))
     enlazar_publicaciones(obras)
+    autores = armar_autores(obras, fichas_autores)
     relacionar(obras)
-    fac = facetas(obras)
+    fac = facetas(obras, config.get("biblioteca"))
 
     if SALIDA.exists():
         shutil.rmtree(SALIDA)
     SALIDA.mkdir()
     shutil.copytree(RAIZ / "estatico", SALIDA / "estatico", ignore=shutil.ignore_patterns(".gitkeep"))
     achicar_portadas(SALIDA / "estatico" / "portadas")
+    achicar_portadas(SALIDA / "estatico" / "autores")
     (SALIDA / ".nojekyll").write_text("")
 
     env = Environment(
@@ -488,7 +573,8 @@ def main() -> int:
     del_dia = sorted((o for o in obras if not o["revision"] and not o["oculta"]), key=lambda o: o["id"])
     escribir("index.html", "catalogo.html", obras=obras, facetas=fac, del_dia=del_dia,
              datos_json=a_js(datos_js),
-             params_json=a_js({"dims": params, "pub": PARAM_PUBLICACION}))
+             params_json=a_js({"dims": params, "pub": PARAM_PUBLICACION,
+                               "bib": next((f["nombre"] for f in fac if f["dim"] == "biblioteca"), "")}))
 
     visibles = [o for o in obras if not o["oculta"]]
     for o in obras:
@@ -504,6 +590,9 @@ def main() -> int:
         escribir(f"obras/{o['id']}/index.html", "ficha.html", obra=o,
                  anterior=anterior, siguiente=siguiente)
 
+    for a in autores:
+        escribir(f"autores/{a['id']}/index.html", "autore.html", autore=a)
+
     conteos = {d: Counter(v for o in obras for v in o[d]) for d in DIMENSIONES}
     escribir("vocabulario/index.html", "vocabulario.html", vocab=vocab, conteos=conteos,
              facetas=fac)
@@ -516,7 +605,8 @@ def main() -> int:
 
     ocultas = sum(o["oculta"] for o in obras)
     print(f"✓ Sitio construido en _site/ con {len(obras)} obras"
-          + (f" ({ocultas} {'escondida' if ocultas == 1 else 'escondidas'} por defecto en el catálogo)." if ocultas else "."))
+          + (f" ({ocultas} {'escondida' if ocultas == 1 else 'escondidas'} por defecto en el catálogo)" if ocultas else "")
+          + f" y {len(autores)} páginas de autores.")
     if Image is None:
         print("  (Pillow no está instalado: las portadas se publicaron sin achicar.)")
     if avisos:

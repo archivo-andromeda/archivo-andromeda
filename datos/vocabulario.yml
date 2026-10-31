@@ -172,6 +172,9 @@ afectos:
   curiosidad:
     descripcion: "Engancha; dan ganas de saber más."
     alias: [intriga]
+  risa:
+    descripcion: "Hace reír, a carcajadas o por lo bajo."
+    alias: [humor, carcajada, diversión, gracia]
 
 # Los temas son etiquetas libres: no necesitan estar en el vocabulario.
 # Si quieres unificar variantes, agrega aquí un alias.
