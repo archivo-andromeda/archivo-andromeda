@@ -12,7 +12,7 @@
   "use strict";
 
   const datos = JSON.parse(document.getElementById("datos-obras").textContent);
-  const CONFIG = window.ANDROMEDA_PARAMS; // { dims: { subgeneros: "sub", ... }, pub: "pub" }
+  const CONFIG = window.ANDROMEDA_PARAMS; // { dims: { subgeneros: "sub", ... }, pub: "pub", prefijos: { estado: "ficha", ... } }
   const PARAMS = CONFIG.dims;
   const P_PUB = CONFIG.pub;
   const DIMS = Object.keys(PARAMS);
@@ -159,7 +159,9 @@
       const nombre = nombrePub.get(p) || p;
       chip(`en: ${nombre}`, nombre, () => pubs.delete(p));
     });
-    DIMS.forEach((d) => sel[d].forEach((v) => chip(d === "biblioteca" && CONFIG.bib ? `${CONFIG.bib}: ${v}` : v, v, () => sel[d].delete(v))));
+    // Algunos filtros llevan un prefijo para entenderse solos («ficha: completa», «Biblioteca RARA: disponible»)
+    const prefijo = (d) => (CONFIG.prefijos || {})[d];
+    DIMS.forEach((d) => sel[d].forEach((v) => chip(prefijo(d) ? `${prefijo(d)}: ${v}` : v, v, () => sel[d].delete(v))));
     if (DIMS.some((d) => sel[d].size) || pubs.size || q.value) {
       const l = document.createElement("button");
       l.type = "button";

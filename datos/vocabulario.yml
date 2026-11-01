@@ -89,19 +89,22 @@ subgeneros:
     alias: [ucronia]
   fantasía:
     descripcion: "Mundos regidos por la magia o lo maravilloso."
-    alias: [fantasia, fantástico, fantastico]
+    alias: [fantasia, fantástico, fantastico, fantasía animal]
   horror:
     descripcion: "Narrativas del miedo y lo monstruoso."
     alias: [terror]
   ficción climática:
     descripcion: "Relatos sobre la crisis climática y ecológica."
-    alias: [cli-fi, clifi, ficcion climatica]
+    alias: [cli-fi, clifi, ficcion climatica, ecoficción]
   postapocalíptico:
     descripcion: "Después del fin del mundo (o de un mundo)."
     alias: [postapocaliptico, post-apocalíptico, postapocalipsis]
   poesía especulativa:
     descripcion: "Poesía que trabaja con imaginarios especulativos."
     alias: [cifi-poesia, poesia especulativa, cf-poesía]
+  realismo mágico:
+    descripcion: "Lo extraordinario aparece en la vida cotidiana como algo natural, sin que nadie se sorprenda."
+    alias: [realismo magico]
 
 disidencias:
   lésbica:
@@ -175,6 +178,43 @@ afectos:
   risa:
     descripcion: "Hace reír, a carcajadas o por lo bajo."
     alias: [humor, carcajada, diversión, gracia]
+  hastío:
+    descripcion: "Aburre, cansa o satura."
+    alias: [aburrimiento, tedio, hartazgo]
+
+# Idioma original: la lengua en que se escribió la obra (una edición bilingüe puede llevar dos).
+# Para sumar una lengua, agrégala aquí con su descripción y sus otras formas de escribirla.
+idiomas:
+  español:
+    descripcion: "Escrita en español."
+    alias: [castellano, espanol]
+  portugués:
+    descripcion: "Escrita en portugués."
+    alias: [portugues]
+  francés:
+    descripcion: "Escrita en francés."
+    alias: [frances]
+  mapudungun:
+    descripcion: "Escrita en mapudungun, la lengua del pueblo mapuche."
+    alias: [mapuzungun, mapudungu, mapuchedungun]
+  quechua:
+    descripcion: "Escrita en quechua (runasimi)."
+    alias: [runasimi, runa simi, quichua]
+  aymara:
+    descripcion: "Escrita en aymara."
+    alias: [aimara]
+  guaraní:
+    descripcion: "Escrita en guaraní (avañe'ẽ)."
+    alias: [guarani, avañe'ẽ, avañee]
+  náhuatl:
+    descripcion: "Escrita en náhuatl."
+    alias: [nahuatl]
+  maya:
+    descripcion: "Escrita en maya (maaya t'aan)."
+    alias: [maya yucateco, maaya t'aan]
+  creol haitiano:
+    descripcion: "Escrita en creol haitiano (kreyòl ayisyen)."
+    alias: [kreyòl, kreyol, kreyòl ayisyen, creole, criollo haitiano, creol]
 
 # Los temas son etiquetas libres: no necesitan estar en el vocabulario.
 # Si quieres unificar variantes, agrega aquí un alias.

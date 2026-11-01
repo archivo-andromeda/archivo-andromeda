@@ -11,6 +11,11 @@ Si la propuesta trae un enlace a la imagen de portada, la descarga, la achica
 y la guarda en estatico/portadas/<id>.webp, donde el sitio la encuentra sola.
 Si no puede, anota el enlace en la columna «revision» de la obra.
 
+Las obras nuevas entran con la columna «estado» vacía, es decir, como fichas «nuevas»
+(con el sello «en revisión»). Las respuestas del botón «Ayúdanos a completarla» de las
+fichas llegan a la misma hoja con el título y le autore de una obra que ya existe, así
+que el importador las salta: revísalas en la hoja y pasa a mano lo que sirva.
+
 Uso:
     python scripts/importar_propuestas.py "https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"
     python scripts/importar_propuestas.py respuestas.csv
@@ -35,10 +40,10 @@ except ImportError:  # pragma: no cover
 RAIZ = Path(__file__).resolve().parent.parent
 OBRAS = RAIZ / "datos" / "obras.csv"
 PORTADAS = RAIZ / "estatico" / "portadas"
-COLUMNAS = ["id", "titulo", "autoria", "editorx", "anio", "pais", "formato", "medio", "publicado_en",
-            "subgeneros", "disidencias", "afectos", "temas", "editorial", "descripcion",
-            "conseguir", "leer_en_linea", "referencias", "enlace", "propuesta_por", "revision"]
-MULTIPLES = {"pais", "subgeneros", "disidencias", "afectos", "temas", "formato", "medio"}   # separados por ; o ,
+COLUMNAS = ["id", "titulo", "autoria", "editorx", "anio", "pais", "idioma", "formato", "medio", "publicado_en",
+            "subgeneros", "disidencias", "afectos", "temas", "editorial", "descripcion", "sinopsis",
+            "conseguir", "leer_en_linea", "biblioteca", "referencias", "enlace", "propuesta_por", "estado", "revision"]
+MULTIPLES = {"pais", "idioma", "subgeneros", "disidencias", "afectos", "temas", "formato", "medio"}   # separados por ; o ,
 PERSONAS = {"autoria", "editorx"}                                                 # separados por ; o ,
 ENLACES = {"donde", "referencias", "enlace"}                                     # separados por ; , o espacios
 
@@ -54,6 +59,7 @@ PREGUNTAS = [
     ("editorx", ["editorx", "edicion o compil", "compil"]),
     ("anio", ["ano", "año"]),
     ("pais", ["pais"]),
+    ("idioma", ["idioma", "lengua"]),
     ("formato", ["formato"]),
     ("medio", ["medio"]),
     ("publicado_en", ["publicado en", "publicada en", "publicado"]),

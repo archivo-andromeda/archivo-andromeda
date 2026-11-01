@@ -14,6 +14,12 @@ url_sitio: "https://archivo-andromeda.github.io/archivo-andromeda"
 # Mientras esté vacío, la página "Proponer una obra" mostrará un aviso.
 formulario_url: "https://forms.gle/vtmChzjUD1wiLhrW7"
 
+# Enlace del botón «Ayúdanos a completarla» de las fichas en revisión y revisadas:
+# el mismo formulario, con el título y le autore ya escritos (en Google Forms:
+# ⋮ → Get pre-filled link, escribiendo TITULO y AUTORE en esas preguntas).
+# El sitio reemplaza TITULO y AUTORE por los datos de cada obra. Vacío = el botón lleva a «Proponer».
+completar_url: "https://docs.google.com/forms/d/e/1FAIpQLSehO8xdgGS2G3kYI5wZdNUKjIZEuXukSmdxIRdbrbc_6hMFbw/viewform?usp=pp_url&entry.1092076190=TITULO&entry.1606677064=AUTORE"
+
 # Correo o red de contacto (opcional). Déjalo vacío para no mostrarlo.
 contacto: "archivo.andromeda@gmail.com"
 

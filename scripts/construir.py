@@ -19,6 +19,7 @@ import sys
 import unicodedata
 from collections import Counter
 from pathlib import Path
+from urllib.parse import quote_plus
 
 import markdown
 import yaml
@@ -42,13 +43,44 @@ DIMENSIONES = {
     "formato": ("formato", "Formato", "for"),
     "medio": ("medio", "Medio", "med"),
     "pais": ("pais", "País", "pai"),
+    "idioma": ("idioma", "Idioma original", "idi"),
     "decada": (None, "Década", "dec"),
     "temas": ("temas", "Temas", "tem"),
+    "estado": (None, "Estado de la ficha", "est"),  # «en revisión» / «revisada» / «completa»: columna «estado»
 }
-CONTROLADAS = {"subgeneros", "disidencias", "afectos", "formato", "medio"}
+CONTROLADAS = {"subgeneros", "disidencias", "afectos", "formato", "medio", "idioma"}
 VOCAB_CLAVE = {"subgeneros": "subgeneros", "disidencias": "disidencias", "afectos": "afectos", "formato": "formatos",
-               "medio": "medios", "temas": "temas"}
+               "medio": "medios", "idioma": "idiomas", "temas": "temas"}
 PARAM_PUBLICACION = "pub"  # ?pub=… muestra lo publicado en una misma antología, revista o web
+
+# Filtros que solo aparecen si tienen al menos esta cantidad de valores distintos
+# (un filtro de idioma con una sola opción no sirve de nada)
+FILTRO_MINIMO = {"idioma": 2}
+
+# Estados de una ficha: lo que se escribe en la columna «estado» → nombre visible.
+# Vacío = «nueva». El sello «en revisión» y la marca de las tarjetas solo aparecen en las nuevas.
+ESTADOS = {"nueva": "en revisión", "revisada": "revisada", "completa": "completa"}
+ESTADO_ALIAS = {"": "nueva", "nueva": "nueva", "nuevo": "nueva", "en revision": "nueva", "revision": "nueva",
+                "revisada": "revisada", "revisado": "revisada", "completa": "completa", "completo": "completa"}
+# Lo mínimo que pide cada estado (si falta algo, el sitio avisa al construir).
+# Cada requisito: (nombre que se muestra en la ficha, función que dice si la obra lo cumple)
+REQUISITOS = {
+    "revisada": [
+        ("autore", lambda o: bool(o["autoras"])),
+        ("portada", lambda o: bool(o["portada"])),
+        ("sinopsis o descripción", lambda o: bool(o["sinopsis"] or o["descripcion"])),
+        ("formato", lambda o: bool(o["formato"])),
+        ("año", lambda o: bool(o["anio"])),
+        ("país", lambda o: bool(o["pais"])),
+        ("subgénero", lambda o: bool(o["subgeneros"])),
+        # Un libro sin disidencias propias cuyos cuentos sí las tienen (el «libro escondido») cumple
+        ("disidencias", lambda o: bool(o["disidencias"] or any(c["disidencias"] for c in o["contenidos"]))),
+    ],
+    "completa": [
+        ("descripción", lambda o: bool(o["descripcion"])),
+        ("afectos", lambda o: bool(o["afectos"])),
+    ],
+}
 
 # Bases de datos de libros que se reconocen en la columna «referencias»
 BASES = {
@@ -248,6 +280,15 @@ def biblioteca(valor: str, config_bib: dict, titulo: str) -> tuple[list[str], st
     return ["disponible"], url
 
 
+def estado(valor: str, titulo: str) -> str:
+    """Columna «estado» → «nueva», «revisada» o «completa» (vacía = «nueva»)."""
+    e = ESTADO_ALIAS.get(clave(valor))
+    if e is None:
+        avisos.append(f"«{titulo}»: el estado «{valor}» no existe (usa nueva, revisada o completa); se toma como «nueva».")
+        e = "nueva"
+    return e
+
+
 def cargar_obras(mapas, actual, config_bib=None) -> list[dict]:
     obras, vistos = [], set()
     portadas = indexar_portadas()
@@ -289,6 +330,7 @@ def cargar_obras(mapas, actual, config_bib=None) -> list[dict]:
                 "enlace": enlaces(fila.get("enlace", ""), titulo, "enlace"),
                 "propuesta_por": fila.get("propuesta_por", ""),
                 "revision": fila.get("revision", ""),
+                "estado_clave": estado(fila.get("estado", ""), titulo),
                 "portada": portada,
                 "portada_heredada": False,
                 "tela": color_tela(ident),
@@ -299,6 +341,7 @@ def cargar_obras(mapas, actual, config_bib=None) -> list[dict]:
                 "medio": normalizar("medio", separar(fila.get("medio", "")), mapas, titulo),
                 "temas": normalizar("temas", separar(fila.get("temas", "")), mapas, titulo),
                 "pais": normalizar("pais", separar(fila.get("pais", "")), mapas, titulo),
+                "idioma": normalizar("idioma", separar(fila.get("idioma", "")), mapas, titulo),
                 "decada": [decada] if decada else [],
                 "biblioteca": bib,
                 "biblioteca_url": bib_url,
@@ -306,6 +349,7 @@ def cargar_obras(mapas, actual, config_bib=None) -> list[dict]:
                 "contenedor": None, "contenidos": [], "oculta": False,
                 "pub": "", "pub_nombre": "",
             }
+            obra["estado"] = [ESTADOS[obra["estado_clave"]]]
             obras.append(obra)
     for ident in sorted(set(portadas) - vistos):
         avisos.append(f"estatico/portadas/{portadas[ident]}: no hay ninguna obra con el id «{ident}» (¿está bien escrito el nombre?).")
@@ -362,10 +406,36 @@ def enlazar_publicaciones(obras: list[dict]) -> None:
         o["texto"] = clave(" ".join([
             o["titulo"], o["autoria"], o["editorx"], o["editorial"], o["descripcion"], o["sinopsis"], o["anio"],
             o["pub_nombre"], *o["pais"], *o["temas"], *o["subgeneros"], *o["disidencias"], *o["afectos"],
-            *o["formato"], *o["medio"],
+            *o["formato"], *o["medio"], *o["idioma"],
         ]))
         # Lo que basta para encontrar una obra oculta escribiendo su nombre
         o["texto_corto"] = clave(" ".join([o["titulo"], o["autoria"]]))
+
+
+def completitud(obras: list[dict], completar_url: str = "") -> None:
+    """Revisa cada ficha contra los requisitos de su estado y prepara el mensaje
+    «Ayúdanos a completarla» de las fichas nuevas y revisadas.
+
+    «faltan» es la lista de lo que le falta para estar completa (se muestra en la ficha).
+    Si una ficha marcada «revisada» o «completa» no cumple lo mínimo, se avisa al construir.
+    «completar_url» es el enlace prellenado del formulario de config.yml, con TITULO y AUTORE
+    en el lugar del título y le autore.
+    """
+    todos = REQUISITOS["revisada"] + REQUISITOS["completa"]
+    for o in obras:
+        faltan = [nombre for nombre, cumple in todos if not cumple(o)]
+        # En la ficha basta con pedir la descripción: también reemplaza a la sinopsis
+        o["faltan"] = [f for f in faltan if f != "sinopsis o descripción" or "descripción" not in faltan]
+        exigidos = REQUISITOS["revisada"] + (REQUISITOS["completa"] if o["estado_clave"] == "completa" else [])
+        if o["estado_clave"] != "nueva":
+            incumple = [nombre for nombre, cumple in exigidos if not cumple(o)]
+            if incumple:
+                avisos.append(f"«{o['titulo']}» está marcada como «{o['estado_clave']}», pero le falta: {', '.join(incumple)}.")
+        o["completar_url"] = ""
+        if completar_url and o["estado_clave"] != "completa":
+            o["completar_url"] = (completar_url
+                                  .replace("=TITULO", "=" + quote_plus(o["titulo"]))
+                                  .replace("=AUTORE", "=" + quote_plus("; ".join(p["nombre"] for p in o["autoras"]))))
 
 
 def relacionar(obras: list[dict]) -> None:
@@ -463,10 +533,15 @@ def facetas(obras, config_bib=None) -> list[dict]:
             # Solo aparece si alguna obra está disponible; «disponible» va primero
             nombre = (config_bib or {}).get("filtro") or nombre
             valores = sorted(c.items(), key=lambda kv: kv[0] != "disponible") if c.get("disponible") else []
+        elif dim == "estado":
+            orden = list(ESTADOS.values())
+            valores = sorted(c.items(), key=lambda kv: orden.index(kv[0]))
         elif dim == "decada":
             valores = sorted(c.items(), reverse=True)
         else:
             valores = sorted(c.items(), key=lambda kv: (-kv[1], clave(kv[0])))
+        if len(valores) < FILTRO_MINIMO.get(dim, 1):
+            valores = []
         salida.append({"dim": dim, "nombre": nombre, "param": param, "valores": valores})
     return salida
 
@@ -511,6 +586,7 @@ def main() -> int:
     actual, fichas_autores = cargar_autores()
     obras = cargar_obras(mapas, actual, config.get("biblioteca"))
     enlazar_publicaciones(obras)
+    completitud(obras, config.get("completar_url", ""))
     autores = armar_autores(obras, fichas_autores)
     relacionar(obras)
     fac = facetas(obras, config.get("biblioteca"))
@@ -568,13 +644,14 @@ def main() -> int:
     ]
     a_js = lambda d: json.dumps(d, ensure_ascii=False).replace("</", "<\\/")
     params = {d: p for d, (_, _, p) in DIMENSIONES.items()}
-    # Obra del día: solo fichas revisadas (sin texto en «revision») y visibles en el catálogo.
+    # Obra del día: solo fichas revisadas o completas, y visibles en el catálogo.
     # El navegador elige una según la fecha en Chile; si no hay ninguna, el bloque no aparece.
-    del_dia = sorted((o for o in obras if not o["revision"] and not o["oculta"]), key=lambda o: o["id"])
+    del_dia = sorted((o for o in obras if o["estado_clave"] != "nueva" and not o["oculta"]), key=lambda o: o["id"])
+    # Prefijo de las etiquetas de filtros activos que solas no se entienden («ficha: completa»)
+    prefijos = {"biblioteca": next((f["nombre"] for f in fac if f["dim"] == "biblioteca"), ""), "estado": "ficha"}
     escribir("index.html", "catalogo.html", obras=obras, facetas=fac, del_dia=del_dia,
              datos_json=a_js(datos_js),
-             params_json=a_js({"dims": params, "pub": PARAM_PUBLICACION,
-                               "bib": next((f["nombre"] for f in fac if f["dim"] == "biblioteca"), "")}))
+             params_json=a_js({"dims": params, "pub": PARAM_PUBLICACION, "prefijos": prefijos}))
 
     visibles = [o for o in obras if not o["oculta"]]
     for o in obras:
@@ -607,6 +684,8 @@ def main() -> int:
     print(f"✓ Sitio construido en _site/ con {len(obras)} obras"
           + (f" ({ocultas} {'escondida' if ocultas == 1 else 'escondidas'} por defecto en el catálogo)" if ocultas else "")
           + f" y {len(autores)} páginas de autores.")
+    por_estado = Counter(o["estado_clave"] for o in obras)
+    print("  Fichas: " + ", ".join(f"{por_estado[e]} {e}{'s' if por_estado[e] != 1 else ''}" for e in ESTADOS) + ".")
     if Image is None:
         print("  (Pillow no está instalado: las portadas se publicaron sin achicar.)")
     if avisos:

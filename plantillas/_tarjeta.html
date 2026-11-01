@@ -14,6 +14,6 @@
     </ul>
     {% if nota %}<p class="tarjeta-nota">{{ nota }}</p>{% endif %}
   </div>
-  {% if o.revision %}<span class="marca-revision" title="{{ o.revision }}">en revisión</span>{% endif %}
+  {% if o.estado_clave == 'nueva' %}<span class="marca-revision" title="{{ o.revision or 'Datos por confirmar con una lectura' }}">en revisión</span>{% endif %}
 </a>
 {% endmacro %}

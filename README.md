@@ -89,7 +89,7 @@ Pulsa **Commit changes**. El sitio se vuelve a publicar solo.
 
 En <https://forms.google.com> crea un formulario nuevo. **Usa estos títulos de pregunta**: el importador las reconoce por el comienzo del texto, así que puedes agregar una aclaración al final del título, pero no cambiar el principio. El orden no importa.
 
-Divide el formulario en **tres secciones** (botón *Agregar sección*): «La obra» con las preguntas 1 a 8, «Datos de publicación (opcional)» con las preguntas 9 a 18 y «Para terminar» con la 19. Solo título y autore son obligatorias.
+Divide el formulario en **tres secciones** (botón **Add section**): «La obra» con las preguntas 1 a 8, «Datos de publicación (opcional)» con las preguntas 9 a 19 y «Para terminar» con la 20. Solo título y autore son obligatorias.
 
 La primera sección reúne lo que más sirve que complete quien leyó la obra: el subgénero, las disidencias, los afectos, los temas y la descripción. Los datos de publicación casi siempre se pueden encontrar en línea después.
 
@@ -113,6 +113,7 @@ La primera sección reúne lo que más sirve que complete quien leyó la obra: e
 | 9 | Publicado en | Respuesta corta | *Ayuda: «Si es un cuento o una microficción: el nombre del libro, antología, revista o sitio donde se publicó.»* |
 | 10 | Año de publicación | Respuesta corta | |
 | 11 | País | Respuesta corta | *Ayuda: «Si son varios, sepáralos con comas»* |
+| 11b | Idioma original | Casillas | Español · Portugués · Francés · Mapudungun · Quechua · Aymara · Guaraní · Náhuatl · Maya · Creol haitiano · *Otro*. *Ayuda: «La lengua en que se escribió la obra. Si es una edición bilingüe, marca las dos.»* |
 | 12 | Medio | Opción múltiple | Editorial · Autopublicación · Editorial cartonera · Fanzine · Plaquette · Revista impresa · Revista en línea · Blog o web personal · Redes sociales · *Otro* |
 | 13 | Editorial | Respuesta corta | |
 | 14 | Editorx o compilación | Respuesta corta | *Ayuda: «Quién editó o compiló la antología o revista, si corresponde.»* |
@@ -125,9 +126,11 @@ La primera sección reúne lo que más sirve que complete quien leyó la obra: e
 
 | # | Título de la pregunta | Tipo | Opciones o ayuda |
 |---|---|---|---|
-| 19 | Tu nombre o seudónimo (opcional) | Respuesta corta | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
+| 20 | Tu nombre o seudónimo (opcional) | Respuesta corta | *Ayuda: «Aparecerá en la ficha como quien propuso la obra»* |
 
 En las preguntas de opciones, el orden de las opciones da lo mismo: el importador lee el texto. Lo que importa es que cada opción coincida con una etiqueta de `datos/vocabulario.yml` o con uno de sus alias, y que ninguna lleve comas (Google separa con comas las casillas marcadas).
+
+La pregunta «Idioma original» (11b) se agregó después: si tu formulario ya existe, súmala con **Add question** en la sección 2, de tipo **Checkboxes**, con la opción **Other**. Su título tiene que empezar con «Idioma» (o «Lengua»).
 
 Al importar, el enlace de la pregunta 15 se guarda como **lectura en línea** si el medio es revista en línea, blog o redes sociales, y como **dónde conseguirla** en los demás casos.
 
@@ -171,9 +174,11 @@ Así, las propuestas que no aprobaste nunca se hacen públicas.
 1. Abre la hoja de respuestas y revisa las propuestas nuevas.
 2. Para aprobar una, escribe `sí` en su columna **Aprobada**. Si quieres, corrige ahí mismo errores de tipeo.
 3. En GitHub, ve a **Actions → Importar propuestas → Run workflow → Run workflow**.
-4. En uno o dos minutos las obras aprobadas aparecen en `datos/obras.csv` y en el sitio, con el sello **«en revisión»**.
+4. En uno o dos minutos las obras aprobadas aparecen en `datos/obras.csv` y en el sitio, como fichas **nuevas** (con el sello **«en revisión»**).
 
 El importador nunca duplica: si una obra ya está en el catálogo (mismo título y autoría), la salta. Ten en cuenta que Google puede tardar unos 5 minutos en actualizar la hoja publicada.
+
+Por eso las respuestas que llegan desde el botón **«Ayúdanos a completarla»** de las fichas (ver «Estados de las fichas») no crean fichas repetidas: llegan a la misma hoja con el título y le autore de una obra que ya existe, y el importador las salta. Revísalas en la hoja y pasa a mano a `obras.csv` lo que sirva (por ejemplo, los afectos o una descripción).
 
 ### Editar el catálogo directamente
 
@@ -183,11 +188,22 @@ El importador nunca duplica: si una obra ya está en el catálogo (mismo título
 
 > En Excel, usa *Guardar como → CSV UTF-8 (delimitado por comas)*. El «CSV» común puede romper las tildes.
 
-### Confirmar una ficha
+### Estados de las fichas
 
-Cuando hayas revisado una obra, borra el texto de su columna `revision` y desaparece el sello «en revisión».
+Cada ficha tiene uno de tres estados, que escribes en la columna `estado`:
 
-Solo las fichas confirmadas participan en la **obra del día** de la portada. El sitio elige una cada día (a medianoche, hora de Chile) y la muestra igual a todo el mundo; si todavía no hay ninguna ficha confirmada, el bloque no aparece.
+| Estado | Qué significa | Qué pide como mínimo | Qué se ve en el sitio |
+|---|---|---|---|
+| `nueva` (o vacío) | Recién ingresada: los datos vienen de la propuesta, de la editorial o de reseñas. | Nada | Sello **«en revisión»** en la ficha y en la tarjeta del catálogo, y la invitación a completarla |
+| `revisada` | Ya la revisaste tú: datos de publicación, portada, sinopsis y etiquetas en orden. | Autore, portada, sinopsis o descripción, formato, año, país, al menos un subgénero y al menos una disidencia | La invitación a completarla |
+| `completa` | Tiene además la mirada de alguien que la leyó. | Lo de «revisada», más una descripción propia del archivo y al menos un afecto | Nada extra |
+
+- Si marcas una ficha como `revisada` o `completa` y le falta algo de lo mínimo, el sitio te avisa en **Actions → Publicar sitio** (la ficha igual se publica).
+- La **invitación a completarla** aparece al final de las fichas nuevas y revisadas, dice qué le falta (lo calcula el sitio) y lleva al formulario con el título y le autore ya escritos. Ese enlace está en `config.yml` (`completar_url`).
+- La columna `revision` queda para tus notas de trabajo: en las fichas nuevas aparecen al pasar el cursor sobre el sello «en revisión»; en las demás no se muestran.
+- El catálogo tiene el filtro **«Estado de la ficha»**, útil para quien quiera ayudar a completar fichas.
+
+Solo las fichas revisadas y completas participan en la **obra del día** de la portada. El sitio elige una cada día (a medianoche, hora de Chile) y la muestra igual a todo el mundo; si no hay ninguna, el bloque no aparece.
 
 ### Obras relacionadas
 
@@ -247,6 +263,7 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 | `editorx` | Quien edita o compila, separado por `;` | |
 | `anio` | Año de primera publicación | `2023` |
 | `pais` | Uno o varios, separados por `;` | `Argentina` |
+| `idioma` | Del vocabulario: la lengua en que se escribió la obra (en la ficha, «Idioma original»). Si es bilingüe, las dos, separadas por `;`. El filtro del catálogo aparece cuando hay al menos dos idiomas | `español` |
 | `formato` | Del vocabulario: novela, novela corta, libro de cuentos, antología, cuento, microficción, poemario narrativo | `novela` |
 | `medio` | Del vocabulario: editorial, autopublicación, editorial cartonera, fanzine, plaquette, revista impresa, revista en línea, blog o web personal, redes sociales | `editorial` |
 | `publicado_en` | Para cuentos: el `id` o título de un libro del archivo, o el nombre de la antología, revista o web | `ciencia-ficcion-travesti` |
@@ -263,7 +280,8 @@ Edita `datos/vocabulario.yml`. Cada etiqueta puede tener `alias`: otras formas d
 | `referencias` | Fichas en bases de datos de libros, separadas por `;`. Goodreads, Tercera Fundación, ISFDB, StoryGraph y otras aparecen con su nombre | `https://www.goodreads.com/…` |
 | `enlace` | Más información: reseñas, entrevistas. Varios, separados por `;` | `https://…` |
 | `propuesta_por` | Quién la propuso (opcional). Aparece al final de la ficha: «Obra propuesta por…» | |
-| `revision` | Si tiene texto, la ficha muestra el sello «en revisión» y ese texto aparece al pasar el cursor. | |
+| `estado` | `nueva` (o vacío), `revisada` o `completa` (ver «Estados de las fichas») | `revisada` |
+| `revision` | Notas de trabajo. En las fichas nuevas aparecen al pasar el cursor sobre el sello «en revisión» | `Año según la prensa` |
 
 ---
 

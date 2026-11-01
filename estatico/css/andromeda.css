@@ -57,8 +57,8 @@ main { max-width: var(--ancho); margin: 0 auto; padding: 0 24px 4rem; }
 /* Etiquetas: color por dimensión */
 .sello { --c: var(--c-sub); }
 .sello-dis, .sello-boton[data-dim="disidencias"] { --c: var(--c-dis); }
-.sello-boton[data-dim="formato"], .sello-boton[data-dim="medio"], .sello-boton[data-dim="pais"], .sello-boton[data-dim="decada"],
-.sello-formato, .sello-medio, .sello-pais, .sello-decada, .sello-propio { --c: var(--c-geo); }
+.sello-boton[data-dim="formato"], .sello-boton[data-dim="medio"], .sello-boton[data-dim="pais"], .sello-boton[data-dim="decada"], .sello-boton[data-dim="idioma"], .sello-boton[data-dim="estado"],
+.sello-formato, .sello-medio, .sello-pais, .sello-idioma, .sello-decada, .sello-propio { --c: var(--c-geo); }
 .sello-boton[data-dim="temas"], .sello-temas, .nube .sello { --c: var(--c-tem); }
 .sello-boton[data-dim="afectos"], .sello-afectos { --c: var(--c-afe); }
 .activo { --c: var(--acento); }
@@ -395,6 +395,13 @@ body {
 .sinopsis-fuente { font-family: var(--mono); font-size: .76rem; color: var(--texto-3); margin: 0; }
 .ficha-propuesta { margin-top: 2.4rem; font-family: var(--mono); font-size: .8rem; letter-spacing: .04em; color: var(--texto-2); }
 .ficha-propuesta + .ficha-correccion { margin-top: .6rem; }
+
+/* Ficha: invitación a completar la ficha (fichas en revisión y revisadas) */
+.completar { margin-top: 2.6rem; max-width: 40rem; padding: 1.1rem 1.3rem; border: var(--linea-ancho) dashed var(--violeta); border-radius: var(--radio);
+  display: flex; flex-wrap: wrap; align-items: center; gap: .9rem 1.4rem; }
+.completar p { margin: 0; flex: 1 1 18rem; color: var(--texto-2); font-size: .98rem; }
+.boton-completar { --acento: var(--violeta); padding: .65rem 1.05rem; font-size: .82rem; flex-shrink: 0; }
+.completar + .ficha-propuesta { margin-top: 1.6rem; }
 
 /* Páginas de autores */
 .pag-autore .ficha-portada { max-width: 280px; }

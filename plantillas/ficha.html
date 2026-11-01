@@ -56,11 +56,12 @@
     </header>
 
     <div class="tarjeta-catalogo">
-      {% if obra.revision %}<span class="sello-revision" title="{{ obra.revision }}">Ficha en revisión</span>{% endif %}
+      {% if obra.estado_clave == 'nueva' %}<span class="sello-revision" title="{{ obra.revision or 'Datos por confirmar con una lectura' }}">Ficha en revisión</span>{% endif %}
       <dl class="tabla">
         {% if obra.editorx %}<div><dt>Editorx</dt><dd>{{ gente(obra.editorxs) }}</dd></div>{% endif %}
         <div><dt>Año</dt><dd>{{ obra.anio or '—' }}</dd></div>
         <div><dt>País</dt><dd>{% if obra.pais %}{{ sellos('pais', obra.pais) }}{% else %}—{% endif %}</dd></div>
+        <div><dt>Idioma original</dt><dd>{% if obra.idioma %}{{ sellos('idioma', obra.idioma) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
         <div><dt>Formato</dt><dd>{% if obra.formato %}{{ sellos('formato', obra.formato) }}{% else %}—{% endif %}</dd></div>
         <div><dt>Medio</dt><dd>{% if obra.medio %}{{ sellos('medio', obra.medio) }}{% else %}<span class="pendiente">por completar</span>{% endif %}</dd></div>
         {% if obra.pub_nombre %}<div><dt>Publicado en</dt><dd>{{ publicacion(obra) }}</dd></div>{% endif %}
@@ -88,10 +89,18 @@
       </figure>
       {% endif %}
       {% if not obra.descripcion and not obra.sinopsis %}
-        <p class="pendiente-bloque">Descripción por completar. Si conoces esta obra, puedes <a href="{{ enlace('proponer/') }}">enviarnos una reseña breve</a>.</p>
+        <p class="pendiente-bloque">Descripción por completar.</p>
       {% endif %}
     </section>
 
+    {% if obra.estado_clave != 'completa' %}
+    {# Invitación a completar la ficha (fichas nuevas y revisadas); «faltan» lo calcula construir.py #}
+    <aside class="completar" aria-label="Ayuda a completar esta ficha">
+      <p>{% if obra.estado_clave == 'nueva' %}Esta ficha está en revisión: sus datos todavía no se confirman con una lectura.{% if obra.faltan %} Falta: {{ obra.faltan|join(', ') }}.{% endif %} ¿Leíste esta obra?
+      {%- else %}A esta ficha le falta la mirada de alguien que la haya leído{% if obra.faltan %}: {{ obra.faltan|join(', ') }}{% endif %}. ¿La leíste?{% endif %}</p>
+      <a class="boton-sello boton-completar" href="{{ obra.completar_url or enlace('proponer/') }}"{% if obra.completar_url %} rel="noopener" target="_blank"{% endif %}>Ayúdanos a completarla{% if obra.completar_url %} ↗{% endif %}</a>
+    </aside>
+    {% endif %}
     {% if obra.propuesta_por %}<p class="ficha-propuesta">Obra propuesta por {{ obra.propuesta_por }}.</p>{% endif %}
     <p class="ficha-correccion">¿Ves un error o falta algo? <a href="{{ enlace('proponer/') }}">Propón una corrección</a>.</p>
   </div>
