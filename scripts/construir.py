@@ -68,7 +68,8 @@ REQUISITOS = {
     "revisada": [
         ("autore", lambda o: bool(o["autoras"])),
         ("portada", lambda o: bool(o["portada"])),
-        ("sinopsis o descripción", lambda o: bool(o["sinopsis"] or o["descripcion"])),
+                # Un cuento o una microficción suelta no tiene contraportada: no se le pide sinopsis
+        ("sinopsis o descripción", lambda o: bool(o["sinopsis"] or o["descripcion"]) or bool(set(o["formato"]) & {"cuento", "microficción"})),
         ("formato", lambda o: bool(o["formato"])),
         ("año", lambda o: bool(o["anio"])),
         ("país", lambda o: bool(o["pais"])),
