@@ -195,7 +195,7 @@ Cada ficha tiene uno de tres estados, que escribes en la columna `estado`:
 | Estado | Qué significa | Qué pide como mínimo | Qué se ve en el sitio |
 |---|---|---|---|
 | `nueva` (o vacío) | Recién ingresada: los datos vienen de la propuesta, de la editorial o de reseñas. | Nada | Sello **«en revisión»** en la ficha y en la tarjeta del catálogo, y la invitación a completarla |
-| `revisada` | Ya la revisaste tú: datos de publicación, portada, sinopsis y etiquetas en orden. | Autore, portada, sinopsis o descripción, formato, año, país, al menos un subgénero y al menos una disidencia | La invitación a completarla |
+| `revisada` | Ya la revisaste tú: datos de publicación, portada, sinopsis y etiquetas en orden. | Autore, portada, sinopsis o descripción (a cuentos y microficciones no se les pide), formato, año, país, al menos un subgénero y al menos una disidencia | La invitación a completarla |
 | `completa` | Tiene además la mirada de alguien que la leyó. | Lo de «revisada», más una descripción propia del archivo y al menos un afecto | Nada extra |
 
 - Si marcas una ficha como `revisada` o `completa` y le falta algo de lo mínimo, el sitio te avisa en **Actions → Publicar sitio** (la ficha igual se publica).
