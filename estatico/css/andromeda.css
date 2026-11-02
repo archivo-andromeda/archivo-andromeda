@@ -201,7 +201,12 @@ code { font-family: var(--mono); font-size: .85em; background: var(--panel); pad
 .glosario-fila { display: grid; grid-template-columns: 13rem 1fr; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--linea); align-items: baseline; }
 .glosario dd { margin: 0; color: var(--texto-2); }
 .glosario-sin dd { opacity: .55; }
-.nube { display: flex; flex-wrap: wrap; gap: .4rem; }
+.indice-autores .glosario-fila { grid-template-columns: 3rem 1fr; }
+.indice-letra { font-family: var(--display); font-weight: var(--display-peso); font-stretch: var(--display-ancho); font-size: 1.9rem; line-height: 1; color: var(--acento); text-shadow: var(--display-sombra); }
+.indice-nombres { list-style: none; margin: 0; padding: 0; columns: 2 16rem; column-gap: 2rem; }
+.indice-nombres li { padding: .15rem 0; break-inside: avoid; }
+.indice-nombres a { color: var(--texto); text-decoration: none; border-bottom: 1px solid var(--linea); }
+.indice-nombres a:hover { color: var(--acento); border-bottom-color: var(--acento); }
 .llamado { margin: 1.5rem 0 2rem; }
 .boton-sello { display: inline-block; font-family: var(--mono); font-weight: 600; font-size: .95rem; letter-spacing: .06em; text-transform: uppercase; color: var(--boton-txt); background: var(--acento); padding: .85rem 1.4rem; border-radius: var(--radio); text-decoration: none; box-shadow: var(--tarjeta-sombra); }
 .boton-sello:hover { color: var(--boton-txt); background: var(--texto); }
