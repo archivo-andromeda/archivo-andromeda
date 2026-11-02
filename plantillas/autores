@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Autores — {{ sitio.nombre }}{% endblock %}
+{% block descripcion %}Las personas que escribieron o editaron las obras del {{ sitio.nombre }}, en orden alfabético.{% endblock %}
+{% block clase_body %}pag-texto{% endblock %}
+
+{% block contenido %}
+<section class="texto">
+  <h1>Autores</h1>
+  <p class="intro-texto">Las {{ autores|length }} personas que escribieron o editaron obras del archivo, en orden alfabético por nombre.</p>
+
+  <dl class="glosario indice-autores">
+    {% for letra, grupo in autores|groupby('letra') %}
+    <div class="glosario-fila">
+      <dt class="indice-letra">{{ letra }}</dt>
+      <dd><ul class="indice-nombres">{% for a in grupo %}<li><a href="{{ enlace('autores/' ~ a.id ~ '/') }}">{{ a.nombre }}</a></li>{% endfor %}</ul></dd>
+    </div>
+    {% endfor %}
+  </dl>
+</section>
+{% endblock %}
