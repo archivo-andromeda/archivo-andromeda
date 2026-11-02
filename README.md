@@ -233,7 +233,7 @@ Un cuento o una microficción se cataloga como cualquier obra, con formato `cuen
 
 - Varias personas en `autoria` o `editorx` se separan con `;`.
 - Usa siempre el **nombre actual** de cada persona. Si una obra se publicó con otro nombre, o una persona aparece escrita de formas distintas, agrégala a `datos/autores.csv` con sus `variantes` (separadas por `;`): el sitio agrupa todo bajo el nombre actual y **nunca muestra las variantes** ni las usa en el buscador.
-- Cada persona que aparece en `autoria` o `editorx` tiene su página en `autores/<id>/`, con sus obras (los cuentos de un libro suyo van dentro del bloque del libro), lo que hizo como editorx y las disidencias, subgéneros y afectos que recorren su obra. Su nombre en la ficha de una obra enlaza a esa página.
+- Cada persona que aparece en `autoria` o `editorx` tiene su página en `autores/<id>/`, con sus obras (los cuentos de un libro suyo van dentro del bloque del libro), lo que hizo como editorx y las disidencias, subgéneros y afectos que recorren su obra. Su nombre en la ficha de una obra enlaza a esa página. La página `autores/` (menú «Autores») las reúne todas en orden alfabético por nombre de pila.
 - `autores.csv` es opcional: sirve para completar esas páginas. Columnas: `id`, `nombre`, `variantes`, `pais`, `bio`, `enlaces`, `foto_credito`.
   - `id`: déjalo vacío para que se cree a partir del nombre (`Andrea Chapela` → `andrea-chapela`).
   - `pais`: el de la persona (no se toma de sus obras). Si está vacío, no se muestra.
