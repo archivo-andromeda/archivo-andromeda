@@ -29,7 +29,8 @@
     </a>
     <nav class="nav" aria-label="Principal">
       <a href="{{ enlace('') }}" {% if destino == 'index.html' %}aria-current="page"{% endif %}>Catálogo</a>
-      <a href="{{ enlace('autores/') }}" {% if destino.startswith('autores') %}aria-current="page"{% endif %}>Autores</a> {% if destino.startswith('vocabulario') %}aria-current="page"{% endif %}>Vocabulario</a>
+      <a href="{{ enlace('autores/') }}" {% if destino.startswith('autores') %}aria-current="page"{% endif %}>Autores</a>
+      <a href="{{ enlace('vocabulario/') }}" {% if destino.startswith('vocabulario') %}aria-current="page"{% endif %}>Vocabulario</a>
       <a href="{{ enlace('acerca/') }}" {% if destino.startswith('acerca') %}aria-current="page"{% endif %}>Acerca</a>
       <a class="nav-sello" href="{{ enlace('proponer/') }}" {% if destino.startswith('proponer') %}aria-current="page"{% endif %}>Proponer una obra</a>
     </nav>

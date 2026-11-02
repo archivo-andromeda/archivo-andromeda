@@ -522,6 +522,7 @@ def armar_autores(obras: list[dict], fichas: dict[str, dict]) -> list[dict]:
         parrafos = "\n\n".join(l.strip() for l in a["bio"].splitlines() if l.strip())
         a["bio_html"] = markdown.markdown(parrafos, extensions=["smarty"]) if parrafos else ""
         palabras = a["nombre"].split()
+        a["iniciales"] = (palabras[0][0] + (palabras[-1][0] if len(palabras) > 1 else "")).upper()
         a["letra"] = clave(a["nombre"])[:1].upper()  # para la página «Autores» (por nombre de pila)
     return sorted(autores.values(), key=lambda a: clave(a["nombre"]))
 
@@ -668,7 +669,8 @@ def main() -> int:
         escribir(f"obras/{o['id']}/index.html", "ficha.html", obra=o,
                  anterior=anterior, siguiente=siguiente)
 
-        escribir("autores/index.html", "autores.html", autores=autores)
+    escribir("autores/index.html", "autores.html", autores=autores)
+    for a in autores:
         escribir(f"autores/{a['id']}/index.html", "autore.html", autore=a)
 
     conteos = {d: Counter(v for o in obras for v in o[d]) for d in DIMENSIONES}
