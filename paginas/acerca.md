@@ -1,6 +1,5 @@
 ---
 titulo: Acerca del archivo
-cajon: Cajón III · Notas de la curadora
 ---
 
 El **Archivo Andrómeda** es un catálogo de literatura especulativa LGBTQ+ escrita desde América Latina. Incluye novelas, cuentos, antologías y poemarios narrativos.
