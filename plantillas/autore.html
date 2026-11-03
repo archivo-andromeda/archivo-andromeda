@@ -36,7 +36,7 @@
 
   <div class="ficha-cuerpo">
     <header class="ficha-cabecera">
-      <p class="ficha-sig">Autore{% if autore.pais %} · {{ autore.pais|join(', ') }}{% endif %}</p>
+      <p class="ficha-sig">{{ autore.rotulo }}{% if autore.pais %} · {{ autore.pais|join(', ') }}{% endif %}{% if autore.pronombres %} · {{ autore.pronombres }}{% endif %}</p>
       <h1>{{ autore.nombre }}</h1>
       <p class="ficha-autoria">
         {%- set n = autore.obras|length -%}

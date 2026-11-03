@@ -5,7 +5,7 @@ on:
     branches: [main]
   workflow_dispatch:
   workflow_run:
-    workflows: ["Importar propuestas"]
+    workflows: ["Importar propuestas", "Importar autores"]
     types: [completed]
 
 permissions:

@@ -22,7 +22,7 @@ Todo el catálogo vive en un solo archivo, **`datos/obras.csv`**. Cada vez que l
 ```
 datos/obras.csv          ← EL CATÁLOGO: una fila por obra
 datos/vocabulario.yml    ← etiquetas permitidas, sus descripciones y sinónimos
-datos/autores.csv        ← bio, país, enlaces y variantes de nombre de cada persona (opcional, se llena a mano)
+datos/autores.csv        ← pronombres, bio, país, enlaces y variantes de nombre de cada persona (opcional; a mano o desde el formulario para autores)
 config.yml               ← nombre del sitio, enlace al formulario, créditos, biblioteca aliada
 paginas/acerca.md        ← texto de la página «Acerca»
 paginas/proponer.md      ← texto de la página «Proponer una obra»
@@ -31,6 +31,7 @@ estatico/autores/        ← fotos de autores, nombradas con el id de cada perso
 plantillas/, estatico/   ← diseño (HTML, CSS, JS)
 scripts/construir.py     ← genera el sitio a partir del CSV
 scripts/importar_propuestas.py ← trae las propuestas aprobadas del formulario
+scripts/importar_autores.py    ← trae las respuestas aprobadas del formulario para autores
 .github/workflows/       ← automatizaciones de GitHub (publicar e importar)
 ```
 
@@ -165,6 +166,44 @@ Así, las propuestas que no aprobaste nunca se hacen públicas.
 3. **Value:** el enlace CSV que copiaste.
 4. **Add variable**.
 
+### 3.4 Formulario para autores
+
+Un segundo formulario, para que cada autore complete su propia ficha. Sus preguntas, en este orden (columnas de la hoja de respuestas):
+
+| Col. | Pregunta | Qué pasa con la respuesta |
+|---|---|---|
+| A | Timestamp | Se usa para no importar dos veces la misma respuesta. |
+| B | Nombre con el que quieres aparecer en el archivo | Tiene que coincidir con una autoría o editorx de `obras.csv` (o con un nombre o variante de `autores.csv`). Si solo cambian tildes o mayúsculas, se usa como la persona lo escribió. |
+| C | Pronombres con los que quieres aparecer en el archivo | Columna `pronombres`. Se muestran en su página y deciden la palabra de arriba: «Autora» (ella), «Autor» (él) o «Autore» (elle, varios o ninguno). |
+| D | Correo de contacto | **Nunca se publica ni llega al repositorio.** |
+| E | País | Columna `pais`. |
+| F | Bio breve | Columna `bio`. |
+| G | Enlaces | Columna `enlaces`. |
+| H | Foto para tu ficha (archivo) | Queda privada en tu Drive: el importador avisa que hay que bajarla y subirla a mano a `estatico/autores/`. |
+| I | Enlace de la foto | Se descarga sola a `estatico/autores/<id>.webp`. |
+| J | Crédito de la foto | Columna `foto_credito`. |
+| K–M | Correcciones, otras obras, recomendaciones | **No se publican.** Léelas en la hoja. |
+| N | ¿Autorizas la publicación…? | Solo se importa si la respuesta empieza con «Sí». |
+| O | `Aprobada` (la agregas tú) | Solo se importa si escribes `sí`. |
+
+**Preparar la hoja (una sola vez):**
+
+1. En el formulario: **Responses** → **Link to Sheets** → **Create a new spreadsheet**.
+2. En la hoja, escribe `Aprobada` en la celda **O1**.
+3. Crea una pestaña nueva (botón **+** abajo a la izquierda) y llámala `publicar`. En su celda **A1** pega:
+
+   ```
+   =QUERY('Form Responses 1'!A:O, "select A, B, C, E, F, G, H, I, J, N, O where lower(N) starts with 's' and lower(O) matches 's[ií]'", 1)
+   ```
+
+   Esa pestaña tiene solo las columnas públicas y solo las filas autorizadas y aprobadas: **el correo y los comentarios nunca salen de la hoja**. Si más adelante agregas o cambias de lugar preguntas del formulario, revisa las letras de la fórmula.
+4. Publica **solo esa pestaña**: **File → Share → Publish to web** → en lugar de **Entire document** elige `publicar` → en lugar de **Web page** elige **Comma-separated values (.csv)** → **Publish**. Copia el enlace.
+5. En GitHub: **Settings → Secrets and variables → Actions → Variables → New repository variable**, con **Name** `AUTORES_CSV_URL` y el enlace como **Value**.
+
+**Cada vez que lleguen respuestas:** revísalas en la hoja (puedes corregir erratas ahí mismo), escribe `sí` en **Aprobada** y ve a **Actions → Importar autores → Run workflow**. Lo que no se pudo importar (un nombre que no está en el archivo, una foto que hay que subir a mano) aparece como aviso ⚠ en el registro de esa ejecución.
+
+Cada respuesta se importa una sola vez (la columna `formulario` de `autores.csv` guarda su marca temporal; no la edites). Así, lo que corrijas a mano en `autores.csv` no se pisa al volver a ejecutar el importador. Si la persona responde de nuevo, vale su respuesta más reciente, y solo en los campos que contestó.
+
 ---
 
 ## 4. El día a día: curar y publicar
@@ -234,7 +273,9 @@ Un cuento o una microficción se cataloga como cualquier obra, con formato `cuen
 - Varias personas en `autoria` o `editorx` se separan con `;`.
 - Usa siempre el **nombre actual** de cada persona. Si una obra se publicó con otro nombre, o una persona aparece escrita de formas distintas, agrégala a `datos/autores.csv` con sus `variantes` (separadas por `;`): el sitio agrupa todo bajo el nombre actual y **nunca muestra las variantes** ni las usa en el buscador.
 - Cada persona que aparece en `autoria` o `editorx` tiene su página en `autores/<id>/`, con sus obras (los cuentos de un libro suyo van dentro del bloque del libro), lo que hizo como editorx y las disidencias, subgéneros y afectos que recorren su obra. Su nombre en la ficha de una obra enlaza a esa página. La página `autores/` (menú «Autores») las reúne todas en orden alfabético por nombre de pila.
-- `autores.csv` es opcional: sirve para completar esas páginas. Columnas: `id`, `nombre`, `variantes`, `pais`, `bio`, `enlaces`, `foto_credito`.
+- `autores.csv` es opcional: sirve para completar esas páginas, a mano o con el formulario para autores (ver 3.4). Columnas: `id`, `nombre`, `variantes`, `pronombres`, `pais`, `bio`, `enlaces`, `foto_credito`, `formulario`.
+  - `pronombres`: como la persona los escribe (`ella`, `él/lo`, `elle`…). Se muestran en su página; con «ella» dice «Autora», con «él» dice «Autor» y en los demás casos «Autore».
+  - `formulario`: la llena el importador; no la edites.
   - `id`: déjalo vacío para que se cree a partir del nombre (`Andrea Chapela` → `andrea-chapela`).
   - `pais`: el de la persona (no se toma de sus obras). Si está vacío, no se muestra.
   - `bio`: cada salto de línea dentro de la celda es un párrafo nuevo. Se puede usar `*cursiva*` para los títulos. Si está vacía, la página dice «Bio por completar».

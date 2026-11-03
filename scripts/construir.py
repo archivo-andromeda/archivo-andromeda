@@ -222,6 +222,7 @@ def cargar_autores() -> tuple[dict[str, str], dict[str, dict]]:
             fichas[nombre] = {
                 "id": slug(fila.get("id") or nombre),
                 "nombre": nombre,
+                "pronombres": fila.get("pronombres", ""),
                 "pais": separar(fila.get("pais", "")),
                 "bio": fila.get("bio", ""),
                 "enlaces": enlaces(fila.get("enlaces", ""), nombre, "enlaces"),
@@ -476,6 +477,18 @@ def relacionar(obras: list[dict]) -> None:
                              for *_, c, comparte in candidatas[:RELACIONADAS_MAX]]
 
 
+def rotulo_autore(pronombres: str) -> str:
+    """Palabra sobre el nombre en la página de cada persona, según sus pronombres
+    (columna «pronombres» de autores.csv): «Autora» si solo usa ella/la, «Autor» si solo
+    usa él/lo y «Autore» en cualquier otro caso (elle, varios pronombres o ninguno)."""
+    palabras = set(re.findall(r"[a-z]+", clave(pronombres)))
+    if palabras and palabras <= {"ella", "ellas", "la", "las"}:
+        return "Autora"
+    if palabras and palabras <= {"el", "ellos", "lo", "los"}:
+        return "Autor"
+    return "Autore"
+
+
 def armar_autores(obras: list[dict], fichas: dict[str, dict]) -> list[dict]:
     """Una página por cada persona que aparece como autore o editorx.
 
@@ -491,6 +504,7 @@ def armar_autores(obras: list[dict], fichas: dict[str, dict]) -> list[dict]:
         if p["id"] not in autores:
             autores[p["id"]] = {
                 "id": p["id"], "nombre": p["nombre"], "pais": f.get("pais", []),
+                "pronombres": f.get("pronombres", ""),
                 "bio": f.get("bio", ""), "enlaces": f.get("enlaces", []),
                 "foto": f"estatico/autores/{fotos[p['id']]}" if p["id"] in fotos else "",
                 "foto_credito": f.get("foto_credito", ""), "obras": [], "editadas": [],
@@ -524,6 +538,7 @@ def armar_autores(obras: list[dict], fichas: dict[str, dict]) -> list[dict]:
         palabras = a["nombre"].split()
         a["iniciales"] = (palabras[0][0] + (palabras[-1][0] if len(palabras) > 1 else "")).upper()
         a["letra"] = clave(a["nombre"])[:1].upper()  # para la página «Autores» (por nombre de pila)
+        a["rotulo"] = rotulo_autore(a["pronombres"])
     return sorted(autores.values(), key=lambda a: clave(a["nombre"]))
 
 
