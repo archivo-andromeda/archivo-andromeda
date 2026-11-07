@@ -13,32 +13,35 @@
 
 formatos:
   novela:
-    descripcion: "Narración extensa de una sola autoría."
+    descripcion: "Narración media o larga que cuenta una historia."
   novela corta:
-    descripcion: "Narración más breve que una novela; en otras tradiciones, nouvelle."
+    descripcion: "Narración breve, llamada también «novelle»."
     alias: [nouvelle, novelle, novela breve]
   libro de cuentos:
-    descripcion: "Colección de relatos de una misma autoría."
-    alias: [cuentos, relatos, libro de relatos, colección de cuentos]
+    descripcion: "Colección de varios relatos de una misma autoría."
+    alias: [cuentos, relatos, libro de relatos, colección de cuentos, coleccion de cuentos]
   antología:
-    descripcion: "Selección de textos de varias autorías, reunidos en una compilación."
+    descripcion: "Libro que agrupa textos de varias autorías."
     alias: [antologia, compilación, compilacion]
   cuento:
-    descripcion: "Un relato suelto, publicado en un libro, una revista o la web."
+    descripcion: "Un relato suelto. Puedes ser en un libro, una revista o en una página web como un blog."
     alias: [relato, cuento suelto]
   microficción:
-    descripcion: "Un relato muy breve: microrrelato o minificción."
+    descripcion: "Un relato muy breve. Con máximo un par de cientos de palabras."
     alias: [microficcion, micro ficción, microrrelato, minificción, minificcion, microcuento]
   poemario narrativo:
     descripcion: "Poesía que construye un mundo o una historia."
     alias: [poemario, poesía narrativa]
+  formato mixto:
+    descripcion: "Un libro que incluya textos narrativos y otros de no ficción como ensayos o crónicas"
+    alias: [formato híbrido, híbrido, hibrido, mixto]
 
 # Medio: dónde o cómo se publicó la obra.
 # Los que llevan «en_linea: true» hacen que, al importar una propuesta,
 # el enlace «Dónde conseguirla o leerla» se guarde como lectura en línea.
 medios:
   editorial:
-    descripcion: "Publicada por una editorial, grande o independiente."
+    descripcion: "Publicada por una editorial, tradicional o independiente."
     alias: [libro, editorial independiente]
   autopublicación:
     descripcion: "Publicada por su propia autoría, en papel o digital."
@@ -70,34 +73,34 @@ medios:
 
 subgeneros:
   ciencia ficción:
-    descripcion: "Futuros, tecnologías, ciencias y otros mundos posibles."
+    descripcion: "Relatos que imaginen usando herramientas racionales: futuros, tecnologías, ciencias y otros mundos posibles."
     alias: [cf, cifi, ci-fi, sci-fi, scifi, ciencia ficcion, cf-varios]
   weird:
-    descripcion: "Lo raro: mezcla de lo fantástico, lo horroroso y lo inclasificable."
+    descripcion: "Lo raro: mezcla lo fantástico, lo horroroso y lo inclasificable."
     alias: [new weird, raro, lo raro]
   distopía:
-    descripcion: "Sociedades que funcionan como advertencia."
+    descripcion: "Escritos que imaginen sociedades rotas o autoritarias, a modo de advertencia."
     alias: [distopia, distópica]
   utopía:
-    descripcion: "Imaginaciones de mundos mejores o deseables."
+    descripcion: "Textos que ilustren mundos mejores o deseables."
     alias: [utopia, utópica]
   gótico:
-    descripcion: "Atmósferas de encierro, ruina, secreto y terror."
+    descripcion: "Narraciones con atmósferas cargadas de suspenso, encierro, secretos y terror."
     alias: [gotico, gótica]
   ucronía:
-    descripcion: "Historias alternativas: ¿qué habría pasado si…?"
+    descripcion: "Historias alternativas: ¿qué hubiera pasado si…?"
     alias: [ucronia]
   fantasía:
-    descripcion: "Mundos regidos por la magia o lo maravilloso."
+    descripcion: "Narraciones que incluyen lo imposible, la magia o lo maravilloso."
     alias: [fantasia, fantástico, fantastico, fantasía animal]
   horror:
-    descripcion: "Narrativas del miedo y lo monstruoso."
+    descripcion: "Narrativas centradas en el terror, lo perturbador y lo monstruoso."
     alias: [terror]
   ficción climática:
-    descripcion: "Relatos sobre la crisis climática y ecológica."
+    descripcion: "Historias centradas en la crisis climática y ecológica."
     alias: [cli-fi, clifi, ficcion climatica, ecoficción]
   postapocalíptico:
-    descripcion: "Después del fin del mundo (o de un mundo)."
+    descripcion: "Narraciones que cuentan lo sucedido despues del fin del mundo (o de un mundo)."
     alias: [postapocaliptico, post-apocalíptico, postapocalipsis]
   poesía especulativa:
     descripcion: "Poesía que trabaja con imaginarios especulativos."
@@ -108,78 +111,78 @@ subgeneros:
 
 disidencias:
   lésbica:
-    descripcion: "Deseos, vínculos e identidades lésbicas y sáficas."
+    descripcion: "Deseos, relaciones e identidades lésbicas y sáficas."
     alias: [lesbica, lesbiana, sáfica, safica]
   gay:
-    descripcion: "Deseos, vínculos e identidades gays."
+    descripcion: "Deseos, relaciones e identidades gays."
     alias: [homosexual]
-  marica:
-    descripcion: "Mariconerías: identidad y política marica."
-    alias: [maricón, marikón]
   bisexual:
     descripcion: "Deseos e identidades bisexuales y pansexuales."
-    alias: [bi, pansexual]
+    alias: [bi, pansexual, omnisexual, polisexual]
   trans:
-    descripcion: "Experiencias e identidades trans."
-    alias: [transgénero, transmasculino, transfemenino]
+    descripcion: "Experiencias, corporalidades e identidades trans."
+    alias: [transgénero, transmasculino, transfemenino, trans*, transexual]
   travesti:
     descripcion: "Identidad y política travesti."
-    alias: [trava]
+    alias: [trava, travo]
+  marica:
+    descripcion: "Identidades y política marica. También cola, fleto, invertido, etc."
+    alias: [maricón, marikón, cola, fleto, marika]
   no binarie:
-    descripcion: "Identidades fuera del binario de género."
-    alias: [no binario, no-binarie, nb, enby]
+    descripcion: "Identidades y corporalidades que resisten el binario de género."
+    alias: [no binario, no-binarie, nb, enby, enebé, nobi]
   género fluido:
-    descripcion: "Identidades o cuerpos cuyo género cambia o fluye."
+    descripcion: "Identidades o corporalides cuyo género cambia o fluye constantemente."
     alias: [genero fluido, fluidez de género]
   intersex:
-    descripcion: "Experiencias de cuerpos intersex."
+    descripcion: "Experiencias indentidades, corporalidades y comunidades intersex."
     alias: [intersexual]
   asexual:
-    descripcion: "Experiencias asexuales y arrománticas."
-    alias: [ace, arromántica]
+    descripcion: "Experiencias e identidades asexuales y arrománticas."
+    alias: [ace, arromántica, acearo, aro, arro, arromantica]
   poliamor:
     descripcion: "Vínculos no monógamos y familias múltiples."
     alias: [poliamoroso, no monogamia]
   cuir:
-    descripcion: "Disidencias sexogenéricas en sentido amplio."
-    alias: [queer, kuir, LGBTQ, lgbt]
+    descripcion: "Identidades, relaciones o corporalidades que resisten las categorías fijas del género o la sexualidad."
+    alias: [queer, kuir]
 
 # Afectos: lo que la obra le hizo sentir a quien la leyó.
 afectos:
   esperanza:
-    descripcion: "Abre un futuro posible, una salida, otra forma de estar juntes."
+    descripcion: "Permite imaginar, aunque sea brevemente, un mundo más bello."
   agobio:
-    descripcion: "Aprieta, angustia, deja sin aire."
-    alias: [angustia, ansiedad, opresión]
+    descripcion: "Se siente opresión, angustia, una tensión que no se libera."
+    alias: [angustia, ansiedad, opresión, tensión]
   calentura:
-    descripcion: "Excita: el deseo se siente en el cuerpo."
+    descripcion: "Conecta con el deseo, con el calor de la carne."
     alias: [excitación, arrechura, cachondez]
   congoja:
-    descripcion: "Una pena honda; dan ganas de llorar."
-    alias: [tristeza, pena, melancolía]
+    descripcion: "Tristeza en sus múltiples acentos, desde la lástima hasta las lágrimas con hipo."
+    alias: [tristeza, pena, melancolía, lástima]
   ternura:
-    descripcion: "Conmueve con suavidad; dan ganas de cuidar."
-    alias: [cariño]
+    descripcion: "Genera una sensación suave y linda. Ganas de acariciar, cuidar o sólo evidenciar la belleza."
+    alias: [cariño, kawaii, nanai]
   mariposas:
-    descripcion: "Enamora: un revoloteo en el estómago."
+    descripcion: "Provoca un revoloteo en el estómago. El afecto clave del romance."
     alias: [enamoramiento, flechazo]
   rabia:
-    descripcion: "Indigna, enfurece, dan ganas de romper algo."
-    alias: [ira, enojo, indignación, bronca]
+    descripcion: "Indigna, enfurece o frustra, incluso dan ganas de repartir golpes."
+    alias: [ira, enojo, indignación, bronca, frustración, indignacion]
   asco:
-    descripcion: "Repele, revuelve el estómago."
+    descripcion: "Te genera rechazo o dan arcadas, incluso hasta dejar de leer."
     alias: [repulsión, repugnancia]
   extrañeza:
-    descripcion: "Desconcierta: algo no calza y no se sabe bien qué."
+    descripcion: "Hay algo que no cuadra, algo raro o indescriptible."
     alias: [extrañamiento, desconcierto, perplejidad]
   curiosidad:
-    descripcion: "Engancha; dan ganas de saber más."
+    descripcion: "Dan ganas de explorar y buscar más."
     alias: [intriga]
   risa:
-    descripcion: "Hace reír, a carcajadas o por lo bajo."
+    descripcion: "Algo que hace reír, puede ser sólo una sonrisita o una carcajada frente al libro."
     alias: [humor, carcajada, diversión, gracia]
   hastío:
-    descripcion: "Aburre, cansa o satura."
+    descripcion: "Algo que aburre, satura o cansa, se hace díficil seguir leyendo."
     alias: [aburrimiento, tedio, hartazgo]
 
 # Idioma original: la lengua en que se escribió la obra (una edición bilingüe puede llevar dos).
