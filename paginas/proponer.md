@@ -4,6 +4,7 @@ cajon: Buzón de entrada
 ---
 
 ¡El archivo necesita de los aportes de la comunidad!
+
 Si conoces o eres autore de una obra (novela, cuento, poema, antología) que crees que debería ser parte del catálogo, puedes sugerirlo a través del formulario.
 
 Cada propuesta es revisada por le curadore, para evitar spam y chequear datos duros y revisar si, por ejemplo, la publicación es latinoamericana. Sin embargo, las etiquetas de disidencias, afectos, temas o subgénero no se modifican. Eso pertenece a quien envía la propuesta.
