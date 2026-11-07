@@ -174,7 +174,7 @@ Un segundo formulario, para que cada autore complete su propia ficha. Sus pregun
 |---|---|---|
 | A | Timestamp | Se usa para no importar dos veces la misma respuesta. |
 | B | Nombre con el que quieres aparecer en el archivo | Tiene que coincidir con una autoría o editorx de `obras.csv` (o con un nombre o variante de `autores.csv`). Si solo cambian tildes o mayúsculas, se usa como la persona lo escribió. |
-| C | Pronombres con los que quieres aparecer en el archivo | Columna `pronombres`. Se muestran en su página y deciden la palabra de arriba: «Autora» (ella), «Autor» (él) o «Autore» (elle, varios o ninguno). |
+| C | Pronombres con los que quieres aparecer en el archivo | Casillas (**Checkboxes**) `él`, `ella`, `elle` y **Other**. Columna `pronombres`: las marcadas se unen con «/» (`él/elle`); «masculinos», «femeninos» y «neutros» o «no binarios» se traducen a él, ella y elle; lo escrito en **Other** queda como vino. Se muestran en su página y deciden la palabra de arriba: «Autora» (solo ella), «Autor» (solo él) o «Autore» (elle, varios u otros). |
 | D | Correo de contacto | **Nunca se publica ni llega al repositorio.** |
 | E | País | Columna `pais`. |
 | F | Bio breve | Columna `bio`. |

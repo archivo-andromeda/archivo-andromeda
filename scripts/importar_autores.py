@@ -106,6 +106,28 @@ def es_si(valor: str) -> bool:
     return v in SI or v.startswith("si ") or v.startswith("si,")
 
 
+# Pronombres: el formulario tiene casillas «él», «ella», «elle» y «Other». Google junta las
+# casillas marcadas con comas («él, elle»); aquí se unen con «/» («él/elle»). Algunas
+# palabras comunes se traducen a su pronombre; lo demás (escrito en «Other») queda como vino.
+PRONOMBRES = {
+    "el": "él", "ella": "ella", "elle": "elle",
+    "masculino": "él", "masculinos": "él",
+    "femenino": "ella", "femeninos": "ella",
+    "neutro": "elle", "neutros": "elle", "no binario": "elle", "no binarios": "elle",
+}
+
+
+def pronombres(valor: str) -> str:
+    salida = []
+    for p in re.split(r"[,;/]| y ", valor or ""):
+        p = p.strip()
+        if p:
+            p = PRONOMBRES.get(clave(p), p)
+            if p not in salida:
+                salida.append(p)
+    return "/".join(salida)
+
+
 def lista(valor: str, separadores: str) -> str:
     return "; ".join(p.strip() for p in re.split(separadores, valor or "") if p.strip())
 
@@ -220,7 +242,7 @@ def main() -> int:
         ident = slug(persona.get("id") or persona["nombre"])
         hecho = []
         valores = {
-            "pronombres": r.get("pronombres", ""),
+            "pronombres": pronombres(r.get("pronombres", "")),
             "pais": lista(r.get("pais", ""), r"[;,]"),
             "bio": r.get("bio", ""),
             "enlaces": lista(r.get("enlaces", ""), r"[;,\s]+"),
