@@ -20,6 +20,8 @@ recomendaciones) nunca se leen ni se guardan: el repositorio es público.
   la marca temporal de la última respuesta importada. Así, lo que corrijas a mano en
   autores.csv no se pisa al volver a ejecutar el importador; solo una respuesta nueva
   de esa persona lo actualiza (y únicamente en los campos que respondió).
+· Si la columna «id» de una persona está vacía, se escribe a partir de su nombre
+  («Andrés Urrutia Ruiz» → andres-urrutia-ruiz). Es el nombre que debe tener su foto.
 · La foto del enlace se descarga, se achica y queda en estatico/autores/<id>.webp.
   Las fotos subidas como archivo al formulario quedan privadas en tu Drive: el
   importador avisa cuáles hay que bajar y subir a mano.
@@ -120,7 +122,7 @@ PRONOMBRES = {
 def pronombres(valor: str) -> str:
     salida = []
     for p in re.split(r"[,;/]| y ", valor or ""):
-        p = p.strip()
+        p = re.sub(r"(?i)^pronombres?\s+", "", p.strip())  # «Pronombres masculinos» → «masculinos»
         if p:
             p = PRONOMBRES.get(clave(p), p)
             if p not in salida:
@@ -205,9 +207,11 @@ def main() -> int:
 
     if AUTORES.exists():
         with open(AUTORES, encoding="utf-8-sig", newline="") as f:
-            lector = csv.DictReader(f)
-            filas = [{k: (v or "") for k, v in fila.items() if k} for fila in lector]
-            cabecera = [c for c in (lector.fieldnames or []) if c]
+            lector = csv.reader(f)
+            # Nombres de columna sin espacios alrededor (al pegar en GitHub a veces se cuelan)
+            cabecera = [c.strip() for c in next(lector, [])]
+            filas = [{k: (v or "").strip() for k, v in zip(cabecera, fila) if k} for fila in lector if any(fila)]
+            cabecera = list(dict.fromkeys(c for c in cabecera if c))
     else:
         filas, cabecera = [], []
     cabecera += [c for c in COLUMNAS if c not in cabecera]
@@ -266,15 +270,23 @@ def main() -> int:
         cambios += 1
         print(f"  + {persona['nombre']}: " + (", ".join(hecho) if hecho else "sin datos nuevos"))
 
-    if not cambios:
+    # La id de cada persona queda escrita (como en obras.csv), para saber cómo nombrar su foto:
+    # estatico/autores/<id>.webp. Una id ya escrita no se cambia, aunque cambie el nombre.
+    ids_nuevas = 0
+    for f in filas:
+        if not f.get("id") and f.get("nombre"):
+            f["id"] = slug(f["nombre"])
+            ids_nuevas += 1
+    if not cambios and not ids_nuevas:
         print("\nNo hay respuestas nuevas para importar.")
         return 0
     filas.sort(key=lambda f: clave(f.get("nombre", "")))
     with open(AUTORES, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=cabecera, extrasaction="ignore")
+        w = csv.DictWriter(f, fieldnames=cabecera, extrasaction="ignore", lineterminator="\n")
         w.writeheader()
         w.writerows(filas)
-    print(f"\n✓ {cambios} ficha(s) de autores actualizada(s) en datos/autores.csv")
+    print(f"\n✓ {cambios} ficha(s) de autores actualizada(s) en datos/autores.csv"
+          + (f"; se escribió la id de {ids_nuevas} persona(s)" if ids_nuevas else ""))
     return 0
 
 

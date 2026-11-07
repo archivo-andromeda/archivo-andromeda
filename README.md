@@ -276,7 +276,7 @@ Un cuento o una microficción se cataloga como cualquier obra, con formato `cuen
 - `autores.csv` es opcional: sirve para completar esas páginas, a mano o con el formulario para autores (ver 3.4). Columnas: `id`, `nombre`, `variantes`, `pronombres`, `pais`, `bio`, `enlaces`, `foto_credito`, `formulario`.
   - `pronombres`: como la persona los escribe (`ella`, `él/lo`, `elle`…). Se muestran en su página; con «ella» dice «Autora», con «él» dice «Autor» y en los demás casos «Autore».
   - `formulario`: la llena el importador; no la edites.
-  - `id`: déjalo vacío para que se cree a partir del nombre (`Andrea Chapela` → `andrea-chapela`).
+  - `id`: si está vacía, el importador de autores la escribe a partir del nombre (`Andrea Chapela` → `andrea-chapela`), igual que en `obras.csv`. Es el nombre que debe tener su foto (`estatico/autores/andrea-chapela.webp`) y la dirección de su página. Una vez escrita no cambia, aunque cambies el nombre; si agregas una persona a mano, puedes dejarla vacía o escribirla tú.
   - `pais`: el de la persona (no se toma de sus obras). Si está vacío, no se muestra.
   - `bio`: cada salto de línea dentro de la celda es un párrafo nuevo. Se puede usar `*cursiva*` para los títulos. Si está vacía, la página dice «Bio por completar».
   - `enlaces`: web, redes, entrevistas, separados por `;`.
