@@ -434,3 +434,52 @@ body {
   .pag-autore .ficha-portada { max-width: 170px; }
   .autore-iniciales { font-size: 4rem; }
 }
+
+/* Línea de tiempo: un año por fila, también los años sin obras (escala real) */
+.linea { --linea-col: 5.2rem; --linea-eje: calc(var(--linea-col) + .9rem); --portada-linea: 84px; list-style: none; margin: 0 0 2rem; padding: 0; }
+.linea-anio { position: relative; display: grid; grid-template-columns: var(--linea-col) 1fr; gap: 0 2rem; padding: .8rem 0; align-items: start; }
+.linea-anio::before { content: ""; position: absolute; left: var(--linea-eje); top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--linea); }
+.linea-anio:first-child::before { top: 1.3rem; }
+.linea-anio:last-child::before { bottom: auto; height: 1.3rem; }
+.linea-anio::after { content: ""; position: absolute; left: var(--linea-eje); top: 1.05rem; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: var(--violeta); box-shadow: 0 0 0 4px var(--fondo); }
+.linea-rotulo {
+  text-align: right; font-family: var(--display); font-weight: var(--display-peso); font-stretch: var(--display-ancho);
+  font-size: 1.75rem; line-height: 1; text-shadow: var(--display-sombra); padding-top: .2rem;
+}
+.linea-n { display: block; margin-top: .35rem; font-family: var(--mono); font-weight: 400; font-stretch: normal; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: none; color: var(--texto-3); }
+.linea-decada .linea-rotulo { color: var(--violeta); }
+/* Años vacíos: el mismo alto que un año con una fila de portadas (escala real) */
+.linea-vacio { min-height: calc(var(--portada-linea) * 1.5 + 1.6rem); }
+.linea-vacio .linea-rotulo { font-family: var(--mono); font-weight: 400; font-stretch: normal; font-size: .78rem; letter-spacing: .06em; text-shadow: none; color: var(--texto-3); padding: .45rem 0 0; opacity: .8; }
+.linea-vacio.linea-decada .linea-rotulo { color: var(--violeta); opacity: 1; }
+.linea-vacio::after { top: 1.45rem; width: 9px; height: 2px; margin: -1px 0 0 -4.5px; border-radius: 0; background: var(--linea); box-shadow: none; }
+.linea-sin-anio .linea-rotulo { font-size: 1.1rem; }
+
+.linea-obras { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .8rem; }
+.portada-linea { width: var(--portada-linea); }
+.linea-obra { position: relative; display: block; color: var(--texto); text-decoration: none; border-radius: var(--radio-portada); transition: transform .15s ease; }
+.linea-obra:hover, .linea-obra:focus-visible, .linea-obra.linea-tocada { z-index: 6; color: var(--texto); transform: translateY(-3px); }
+.linea-obra:is(:hover, :focus-visible, .linea-tocada) :is(.portada-tinta, .portada-trama) { opacity: 0; }
+.linea-obra:is(:hover, :focus-visible, .linea-tocada) .portada { box-shadow: 0 0 0 2px var(--violeta); }
+.linea-info {
+  position: absolute; left: 0; top: calc(100% + .55rem); z-index: 5; width: max-content; max-width: 15rem;
+  display: none; flex-direction: column; gap: .3rem; padding: .6rem .8rem;
+  background: var(--panel-2); border: 1px solid var(--violeta); border-radius: var(--radio); box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .9);
+  pointer-events: none; transform: translateX(var(--correr, 0px));
+}
+/* Oculto con display: none para que no ensanche la página en el celular */
+.linea-obra:is(:hover, :focus-visible, .linea-tocada) .linea-info { display: flex; animation: linea-aparece .15s ease; }
+@keyframes linea-aparece { from { opacity: 0; translate: 0 -4px; } }
+.linea-info-titulo { font-family: var(--display); font-weight: var(--display-peso); font-stretch: var(--display-ancho); text-transform: var(--display-caja); font-size: 1.1rem; line-height: 1; text-shadow: .045em .04em 0 color-mix(in srgb, var(--violeta) 80%, transparent); }
+.linea-info-autoria { font-size: .88rem; color: var(--texto-2); }
+
+@media (max-width: 560px) {
+  .linea { --linea-col: 3.3rem; --portada-linea: 64px; }
+  .linea-anio { gap: 0 1.5rem; }
+  .linea-rotulo { font-size: 1.3rem; }
+  .linea-anio:not(.linea-vacio)::after { top: .85rem; }
+  .linea-n { font-size: .6rem; }
+  .linea-obras { gap: .55rem; }
+  .portada-linea .tela-titulo { font-size: .5rem; }
+  .portada-linea .tela-autoria { font-size: .34rem; }
+}

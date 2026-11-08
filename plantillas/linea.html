@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "_portada.html" import portada %}
+{% block titulo %}Línea de tiempo — {{ sitio.nombre }}{% endblock %}
+{% block descripcion %}Las obras del {{ sitio.nombre }} según su año de publicación.{% endblock %}
+{% block clase_body %}pag-linea{% endblock %}
+
+{% macro obra_linea(o) %}
+<li>
+  <a class="linea-obra" href="{{ enlace('obras/' ~ o.id ~ '/') }}">
+    {{ portada(o, recurso, 'portada-linea') }}
+    <span class="linea-info" role="tooltip">
+      <span class="linea-info-titulo">{{ o.titulo }}</span>
+      <span class="linea-info-autoria">{{ o.autoria }}</span>
+    </span>
+  </a>
+</li>
+{% endmacro %}
+
+{% block contenido %}
+<section class="intro">
+  <h1>Línea de tiempo</h1>
+  {# Texto provisorio: reemplázalo por el tuyo #}
+  <p class="intro-texto">Las {{ n_linea }} obras del archivo según su año de publicación{% if anios %}, de {{ anios[0].anio }} a {{ anios[-1].anio }}{% endif %}. Pasa el mouse por una portada para ver su título; haz clic para abrir su ficha.</p>
+</section>
+
+<ol class="linea" aria-label="Obras por año">
+  {% for a in anios %}
+  <li class="linea-anio{% if not a.obras %} linea-vacio{% endif %}{% if a.anio % 10 == 0 %} linea-decada{% endif %}" id="anio-{{ a.anio }}">
+    <span class="linea-rotulo">{{ a.anio }}{% if a.obras|length > 1 %}<span class="linea-n">{{ a.obras|length }} obras</span>{% endif %}</span>
+    {% if a.obras %}
+    <ul class="linea-obras">
+      {% for o in a.obras %}{{ obra_linea(o) }}{% endfor %}
+    </ul>
+    {% else %}
+    <span class="sr">sin obras</span>
+    {% endif %}
+  </li>
+  {% endfor %}
+  {% if sin_anio %}
+  <li class="linea-anio linea-sin-anio" id="anio-sin">
+    <span class="linea-rotulo">Sin año</span>
+    <ul class="linea-obras">
+      {% for o in sin_anio %}{{ obra_linea(o) }}{% endfor %}
+    </ul>
+  </li>
+  {% endif %}
+</ol>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ recurso('estatico/js/linea.js') }}" defer></script>
+{% endblock %}
